@@ -1,0 +1,46 @@
+
+DELETE http://127.0.0.1:3000/api/vendor/products/delete/5faa2a8e789d0223d831bad5 HTTP/1.1
+auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmE2ODM0ZjMxYjk3OTcxZjgyNmNkYzQiLCJpYXQiOjE2MDQ3NjE3MDF9.92HVBf0qo6pRGQNqaVdDn6DrNiXrfEfgPuvTGDVSN58
+
+
+###
+PATCH  http://127.0.0.1:3000/api/vendor/products/update/5fa94df71a3b532fe4533d022 HTTP/1.1
+auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmE2ODM0ZjMxYjk3OTcxZjgyNmNkYzQiLCJpYXQiOjE2MDQ3NjE3MDF9.92HVBf0qo6pRGQNqaVdDn6DrNiXrfEfgPuvTGDVSN58
+Content-Type: application/json
+
+{
+    "product_name": "Pizza 3.0"
+}
+
+###
+GET http://127.0.0.1:3000/api/vendor/products HTTP/1.1
+auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmE2ODM0ZjMxYjk3OTcxZjgyNmNkYzQiLCJpYXQiOjE2MDQ3NjE3MDF9.92HVBf0qo6pRGQNqaVdDn6DrNiXrfEfgPuvTGDVSN58
+
+###
+GET http://127.0.0.1:3000/api/vendor/testing HTTP/1.1
+auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmE2ODM0ZjMxYjk3OTcxZjgyNmNkYzQiLCJpYXQiOjE2MDQ3NjE3MDF9.92HVBf0qo6pRGQNqaVdDn6DrNiXrfEfgPuvTGDVSN58
+
+### 5fa811d2232e0d015855962a : user id
+POST http://127.0.0.1:3000/api/register HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "Admin",
+    "email": "nihalninu25hotmail.com",
+    "password": "234567885",
+    "role": "admin",
+    "pincode": "673601"
+}
+
+###
+POST http://127.0.0.1:3000/api/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "tester@gmaill.com",
+    "password": "1345678"
+}
+
+### auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmE4MTFkMjIzMmUwZDAxNTg1NTk2MmEiLCJpYXQiOjE2MDQ4NTAyMTZ9.uRvGVl6l9au8VRQqTDETpe1kkBqL3IM3lyxK7yiIemg
+
+GET http://127.0.0.1:3000/api/home HTTP/1.1
