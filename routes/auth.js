@@ -2,12 +2,16 @@ const router = require('express').Router()
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const User = require('../models/user')
-const { registerValidation, loginValidation } = require('../validation')
+const { userValidation, loginValidation } = require('../validation')
 
 //user register
 router.post('/register', async (req, res) => {
+
+    // checking if the role is user or not
+    if(req.role != 'user') return res.status(400).send('You can only register as "User"')
+
     // validate data before submitting
-    const { error } = registerValidation(req.body)
+    const { error } = userValidation(req.body)
     if (error) return res.status(400).send(error.details[0].message)
 
     //checking if user is already in database
@@ -51,8 +55,14 @@ router.post('/login', async (req, res) => {
 
     //create and assign a jwt token
     const token = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET)
-    console.log("Logged In")
-    return res.header('auth-token', token).send(user)
+    var d = new Date()
+    console.log(`\nUser: '${user.name}' Logged In At\nDate: ${d.getDate()}:${d.getMonth()}:${d.getFullYear()}\nTime: ${d.getHours()}:${d.getMinutes()}\n***************************`)
+    return res.header('auth-token', token).json({
+        'name': user.name,
+        'email': user.email,
+        'role': user.role,
+        'pincode': user.pincode
+    })
 })
 
 module.exports = router

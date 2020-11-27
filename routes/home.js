@@ -4,9 +4,9 @@ const User = require('../models/user')
 const Products = require('../models/product')
 const authenticate = require('./verifyToken')
 
-router.get('/home', authenticate, async (req, res) => {
+router.get('/home/:userPincode', authenticate, async (req, res) => {
     try{
-        const productList = await Products.find()
+        const productList = await Products.find({pincode: req.params.userPincode})
         res.send(productList)
     }
     catch(err){
