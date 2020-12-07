@@ -20,7 +20,7 @@ const upload = multer({
 })
 
 // Allow vendor to add products
-router.post('/addproducts', authenticate, isVendor, upload.array('product-image', 2), async (req, res) => {
+router.post('/addproducts', authenticate, isVendor, upload.array('product-image', 5), async (req, res) => {
 
     const image_file_names = []
 
@@ -115,6 +115,19 @@ router.delete('/products/delete/:id', authenticate, isVendor, async (req, res) =
 
 //update product details
 router.patch('/products/update/:id', authenticate, isVendor, async (req, res) => {
+
+    //To remove null key:value from the json
+    const removeEmptyOrNull = (obj) => {
+        Object.keys(obj).forEach(k =>
+          (obj[k] && typeof obj[k] === 'object') && removeEmptyOrNull(obj[k]) ||
+          (!obj[k] && obj[k] !== undefined) && delete obj[k]
+        );
+        return obj;
+      };
+    req.body = removeEmptyOrNull(req.body)
+    /* console.log(req.body)
+    console.log(req.params.id) */
+
     flag = 0
     const updates = req.body
     const product_id = req.params.id
@@ -125,9 +138,9 @@ router.patch('/products/update/:id', authenticate, isVendor, async (req, res) =>
         const product_list = await Product.find({ vendor: user_id })
         for (let i = 0; i < product_list.length; i++) {
             if (product_id == product_list[i]._id) {
-
                 // updating product details
                 updated_product = await Product.findByIdAndUpdate(product_id, updates, { useFindAndModify: false })
+                if(!updated_product) return res.status(400).send("Product not available")
                 flag = 1
                 res.send(updated_product)
             }
