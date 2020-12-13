@@ -16,10 +16,6 @@ Content-Type: application/json
 GET http://127.0.0.1:3000/api/vendor/products HTTP/1.1
 auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmFlNzZmYjFmMzhkNzE1Zjg5MWE0MjEiLCJpYXQiOjE2MDY0MDU0NDN9.Js9jxbRYYAJ9ZDNLXZ7S0ndDPfoTOrT3yAWx2jZIROA
 
-### Testing
-GET http://127.0.0.1:3000/api/vendor/testing HTTP/1.1
-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmE2ODM0ZjMxYjk3OTcxZjgyNmNkYzQiLCJpYXQiOjE2MDQ3NjE3MDF9.92HVBf0qo6pRGQNqaVdDn6DrNiXrfEfgPuvTGDVSN58
-
 ### 5fa811d2232e0d015855962a : user id
 ### user register
 POST http://127.0.0.1:3000/api/register HTTP/1.1
@@ -89,3 +85,28 @@ auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmE4MTFkMjIzMmUwZDA
     "name": "Test Vendor 1",
     "email": null
 }
+### Category function testing
+###Adding Category
+
+POST http://127.0.0.1:3000/api/vendor/add-category HTTP/1.1
+Content-Type: application/json
+
+{
+    "category":"new category"
+}
+
+###adding product with category value checked with category document in mongodb
+
+GET http://127.0.0.1:3000/test/2?q=Office%20Items HTTP/1.1
+
+###deleting category
+
+GET http://127.0.0.1:3000/test/3?q=test HTTP/1.1
+
+###image upload test
+
+POST http://127.0.0.1:3000/test/3?q=test HTTP/1.1
+
+###List Category Items
+GET http://127.0.0.1:3000/api/vendor/category HTTP/1.1
+

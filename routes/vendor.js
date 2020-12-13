@@ -4,9 +4,10 @@ const User = require('../models/user')
 const authenticate = require('./verifyToken')
 const path = require('path')
 const multer = require('multer')
-const { productdetailsValidation } = require('../validation')
+const { productDetailsValidation } = require('../validation')
 const { isVendor } = require('./verifyUserRole')
 const fs = require('fs')
+const Category = require('../models/category')
 
 //storage setup for uploading images
 const storage = multer.diskStorage({
@@ -25,7 +26,7 @@ router.post('/addproducts', authenticate, isVendor, upload.array('product-image'
     const image_file_names = []
 
     //validation
-    const { error } = productdetailsValidation(req.body)
+    const { error } = productDetailsValidation(req.body)
     if (error) return res.send(error.details[0].message)
 
     //to get file name of each uploaded files
@@ -41,7 +42,7 @@ router.post('/addproducts', authenticate, isVendor, upload.array('product-image'
         price: Number(req.body.price),
         image_url: image_url_array,
         image_file_name: image_file_names,
-        pincode: Number(req.body.pincode),
+        pincode: Number(req.user.pincode),
         category: req.body.category,
         vendor: req.user
     })
@@ -99,7 +100,7 @@ router.delete('/products/delete/:id', authenticate, isVendor, async (req, res) =
                     res.status(400).send(err)
                 }
 
-                console.log(`\nProduct: ${Product_name.product_name} deleted by Vendor: ${user.name}`)
+                console.log(`\nProduct: '${Product_name.product_name}' deleted by Vendor: '${user.name}'`)
                 const result = await Product.findByIdAndDelete(id)
                 res.send(result)
                 flag = 1
@@ -154,9 +155,33 @@ router.patch('/products/update/:id', authenticate, isVendor, async (req, res) =>
     }
 })
 
-//testing
-router.post('/testing', (req, res) => {
-    console.log(req.body)
+//add new category
+router.post('/add-category', async (req, res) => {
+    
+    const category = new Category({
+        category_name: req.body.category
+    })
+
+    try {
+
+        const savedCategory = await category.save()
+        res.send(savedCategory)
+
+    }
+    catch (err) {
+
+        if(err.code == 11000) return res.status(400).send(`The category '${req.body.category}' already exists in Application. Please select it from dropdown menu.`)
+        else return res.status(400).send(err)
+
+    }
+
+})
+
+router.get('/category',authenticate , async (req, res) => {
+
+    const category = await Category.find()
+    res.send(category)
+
 })
 
 module.exports = router

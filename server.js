@@ -6,6 +6,7 @@ const authRoute = require('./routes/auth')
 const homeRoute = require('./routes/home')
 const vendorRoute = require('./routes/vendor')
 const adminRoute = require('./routes/admin')
+const testRoute = require('./testing/test')
 
 dotenv.config()
 
@@ -30,6 +31,7 @@ app.use('/api', authRoute)
 app.use('/api', homeRoute)
 app.use('/api/vendor', vendorRoute)
 app.use('/api/admin', adminRoute)
+app.use('', testRoute)
 
 app.listen(3000, () => {
     console.log('Server running at http://127.0.0.1:3000')

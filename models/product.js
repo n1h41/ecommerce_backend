@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const User = require('./user')
+const Category = require('./category')
 
 const productSchema = new mongoose.Schema({
     product_name: {
@@ -31,10 +32,7 @@ const productSchema = new mongoose.Schema({
         min: 5
     },
     category: {
-        type: String,
-        required: true,
-        min: 4,
-        max: 255
+        type: String
     },
     vendor: {
         type: mongoose.Schema.Types.ObjectId,
