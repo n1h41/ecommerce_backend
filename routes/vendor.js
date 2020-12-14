@@ -36,6 +36,15 @@ router.post('/addproducts', authenticate, isVendor, upload.array('product-image'
         image_file_names.push(req.files[i].filename)
     }
 
+    //adding product with category value taken from category document in the database
+    try {
+        category = await Category.findOne({ category_name: req.body.category })
+        if(!category) return res.status(400).send(`The category ${req.query.q} doesn't exist. Please add the category.`)
+    }
+    catch (err) {
+        return res.status(400).send(err)
+    }
+
     //uploading request data into the model
     const product = new Product({
         product_name: req.body.product_name,
@@ -177,6 +186,7 @@ router.post('/add-category', async (req, res) => {
 
 })
 
+//get all all available categories
 router.get('/category',authenticate , async (req, res) => {
 
     const category = await Category.find()

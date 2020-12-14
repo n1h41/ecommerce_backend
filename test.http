@@ -51,7 +51,7 @@ auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmNjYTU5OTllZmY1YzE
 ### auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmE4MTFkMjIzMmUwZDAxNTg1NTk2MmEiLCJpYXQiOjE2MDQ4NTAyMTZ9.uRvGVl6l9au8VRQqTDETpe1kkBqL3IM3lyxK7yiIemg
 ### get product list based on pincode
 
-GET http://127.0.0.1:3000/api/home/673601/Food HTTP/1.1
+GET http://127.0.0.1:3000/api/home?pincode=673601&category=Food HTTP/1.1
 auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmE2ODM0ZjMxYjk3OTcxZjgyNmNkYzQiLCJpYXQiOjE2MDQ3NjE3MDF9.92HVBf0qo6pRGQNqaVdDn6DrNiXrfEfgPuvTGDVSN58
 
 ### Vendor List
@@ -109,4 +109,7 @@ POST http://127.0.0.1:3000/test/3?q=test HTTP/1.1
 
 ###List Category Items
 GET http://127.0.0.1:3000/api/vendor/category HTTP/1.1
+
+### Search Functionality
+GET http://127.0.0.1:3000/api/home/items?search=h&pincode=673601
 
