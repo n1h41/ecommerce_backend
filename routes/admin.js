@@ -2,8 +2,10 @@ const router = require('express').Router()
 const authenticate = require('./verifyToken')
 const { isAdmin } = require('./verifyUserRole')
 const User = require('../models/user')
+const OrderDetails = require('../models/order_details')
 const { userValidation } = require('../validation')
 const bcrypt = require('bcryptjs')
+const { json } = require('express')
 
 router.get('/vendor/list', authenticate, isAdmin, async (req, res) => {
 
@@ -106,6 +108,24 @@ router.patch('/vendor/update/:email', authenticate, isAdmin, async (req, res) =>
 
     }
     return res.send(req.body)
+
+})
+
+router.get('/order/history', authenticate, async (req, res) => {
+
+    try{
+
+        const orders = await OrderDetails.find()
+        console.log(orders)
+        res.json(orders)
+
+    } catch(err) {
+
+        res.status(400).json({
+            error: err
+        })
+
+    }
 
 })
 

@@ -1,6 +1,7 @@
 const router = require('express').Router()
 const Products = require('../models/product')
 const Category = require('../models/category')
+const OrderDetails = require('../models/order_details')
 const multer = require('multer')
 const path = require('path')
 
@@ -99,6 +100,45 @@ const upload = multer({
 router.post('/test/img-upload', upload.array('images', 5), (req, res) => {
 
     console.log(req.files)
+
+})
+
+//inserting order date to database
+router.post('/add/date', async (req, res) => {
+
+    req.body.date = Date.now()
+
+    const order = new OrderDetails(req.body)
+    
+    try{
+
+        const savedOrder = await order.save()
+        console.log(savedOrder)
+
+    }
+    catch(err){
+
+        res.status(400).send(err)
+
+    }
+
+})
+
+//get order details for admin
+router.get('/order/history', async (req, res) => {
+
+    try{
+
+        const orders = await OrderDetails.find()
+        res.json(orders)
+
+    } catch(err) {
+
+        res.status(400).json({
+            error: err
+        })
+
+    }
 
 })
 

@@ -1,9 +1,6 @@
 const router = require('express').Router()
-const { json } = require('express')
-const User = require('../models/user')
 const Products = require('../models/product')
 const authenticate = require('./verifyToken')
-
 router.get('/home', authenticate, async (req, res) => {
     try{
         if(req.query.category == 'default'){

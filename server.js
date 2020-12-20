@@ -7,6 +7,7 @@ const homeRoute = require('./routes/home')
 const vendorRoute = require('./routes/vendor')
 const adminRoute = require('./routes/admin')
 const testRoute = require('./testing/test')
+const razorpay = require('./routes/razorpay')
 
 dotenv.config()
 
@@ -22,7 +23,7 @@ async function ConnectDB() {
 
 ConnectDB()
 
-app.use(express.json({ extended: false }))
+app.use(express.json({ extended: false}))
 
 //to access static files
 app.use('/images', express.static('./uploads/images'))
@@ -31,6 +32,8 @@ app.use('/api', authRoute)
 app.use('/api', homeRoute)
 app.use('/api/vendor', vendorRoute)
 app.use('/api/admin', adminRoute)
+app.use('/api/razorpay', razorpay)
+
 app.use('', testRoute)
 
 app.listen(3000, () => {

@@ -34,7 +34,7 @@ POST http://127.0.0.1:3000/api/login HTTP/1.1
 Content-Type: application/json
 
 {
-    "email": "update@gmail.com",
+    "email": "nihalninu25@gmail.com",
     "password": "12345678"
 }
 ### user details update
@@ -113,3 +113,58 @@ GET http://127.0.0.1:3000/api/vendor/category HTTP/1.1
 ### Search Functionality
 GET http://127.0.0.1:3000/api/home/items?search=h&pincode=673601
 
+### Payment
+POST http://127.0.0.1:3000/api/razorpay/payment HTTP/1.1
+Content-Type: application/json
+auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmFlNzZmYjFmMzhkNzE1Zjg5MWE0MjEiLCJpYXQiOjE2MDgxMTc2MzF9.Prr_wdNYz8pTu5PdUYS-2xYlyLkalHR0DyBZys3167U
+
+{
+    "amount":100,
+    "currency":"INR"
+}
+### Add Order details to database
+POST http://127.0.0.1:3000/api/razorpay/order/add HTTP/1.1
+Content-Type: application/json
+auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmFlNzZmYjFmMzhkNzE1Zjg5MWE0MjEiLCJpYXQiOjE2MDgxMTc2MzF9.Prr_wdNYz8pTu5PdUYS-2xYlyLkalHR0DyBZys3167U
+
+{
+    "vendor_id_list": [
+        "5fae76fb1f38d715f891a421",
+        "5fac12d327b1cf34bcffbafc"
+    ],
+    "products":[
+        "test product 1",
+        "test product 2"
+    ],
+    "address": "test address"
+}
+
+###patch
+PATCH  http://127.0.0.1:3000/api/razorpay/order/update HTTP/1.1
+Content-Type: application/json
+auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmFlNzZmYjFmMzhkNzE1Zjg5MWE0MjEiLCJpYXQiOjE2MDgxMTc2MzF9.Prr_wdNYz8pTu5PdUYS-2xYlyLkalHR0DyBZys3167U
+
+{
+    "order_id": "order_GDmpimIrP1KqEj",
+    "order_status": "test address"
+}
+
+###inserting order date to database
+POST http://127.0.0.1:3000/add/date HTTP/1.1
+Content-Type: application/json
+
+{
+    "customer":"test",
+    "vendor_list":["test"],
+    "address":"test",
+    "amount":999,
+    "payment_status":"test",
+    "items":["test"],
+    "order_id":"test"
+}
+
+###get order details for admin
+GET http://127.0.0.1:3000/order/history HTTP/1.1
+
+###
+GET http://127.0.0.1:3000/api/admin/order/history HTTP/1.1
