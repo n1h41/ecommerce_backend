@@ -8,6 +8,7 @@ const vendorRoute = require('./routes/vendor')
 const adminRoute = require('./routes/admin')
 const testRoute = require('./testing/test')
 const razorpay = require('./routes/razorpay')
+const firebaseNotification = require('./firebaseNotification')
 
 dotenv.config()
 
@@ -33,6 +34,7 @@ app.use('/api', homeRoute)
 app.use('/api/vendor', vendorRoute)
 app.use('/api/admin', adminRoute)
 app.use('/api/razorpay', razorpay)
+app.use('/api/firebase', firebaseNotification)
 
 app.use('', testRoute)
 

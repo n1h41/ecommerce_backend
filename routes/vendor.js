@@ -7,6 +7,8 @@ const { productDetailsValidation } = require('../validation')
 const { isVendor } = require('./verifyUserRole')
 const fs = require('fs')
 const Category = require('../models/category')
+const Notification = require('../models/notifications')
+const { json } = require('express')
 
 //storage setup for uploading images
 const storage = multer.diskStorage({
@@ -190,6 +192,13 @@ router.get('/category',authenticate , async (req, res) => {
 
     const category = await Category.find()
     res.send(category)
+
+})
+
+router.get('/notification', authenticate, async (req, res) => {
+
+    const notif = await Notification.find({target: req.user._id})
+    res.send(notif)
 
 })
 

@@ -164,7 +164,40 @@ Content-Type: application/json
 }
 
 ###get order details for admin
-GET http://127.0.0.1:3000/order/history HTTP/1.1
-
-###
 GET http://127.0.0.1:3000/api/admin/order/history HTTP/1.1
+
+### FCM setting token
+POST http://127.0.0.1:3000/api/firebase/setToken HTTP/1.1
+Content-Type: application/json
+
+{
+    "firebase_device_token":"dizB6iLsTyuLGZms-axIHS:APA91bGx-vzoJ983HrCdHwiQbwrsPIUgstHbXDT83GVUawcd3W4yOUb5IGDI6EvivtBEyKH6ql3KaIsKKr5oDLEMyRWt7e625lljLSCoqMRma3R7ne8o7XIFXyVGl7zpH4qZP53pDt6a"
+}
+
+### FCM setting userIid
+PATCH http://127.0.0.1:3000/api/firebase/setUserId?token=dizB6iLsTyuLGZms-axIHS:APA91bGx-vzoJ983HrCdHwiQbwrsPIUgstHbXDT83GVUawcd3W4yOUb5IGDI6EvivtBEyKH6ql3KaIsKKr5oDLEMyRWt7e625lljLSCoqMRma3R7ne8o7XIFXyVGl7zpH4qZP53pDt6a HTTP/1.1
+Content-Type: application/json
+
+{
+    "user_id":"TESTING"
+}
+
+### Send Notifications
+POST http://127.0.0.1:3000/api/firebase/send HTTP/1.1
+Content-Type: application/json
+
+{
+    "notification": {
+        "title": "From Admin",
+        "body": "To all vendors"
+    },
+    "target": "vendors"
+}
+
+### Get Notifications for vendors
+GET http://127.0.0.1:3000/api/vendor/notification HTTP/1.1
+Content-Type: application/json
+
+{
+    "user_id": "5fae76fb1f38d715f891a421"
+}

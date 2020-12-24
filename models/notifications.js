@@ -9,24 +9,14 @@ const notificationSchema = new mongoose.Schema({
         max: 5,
     },
     content: {
-        type: String,
+        type: Object,
         required: true,
-        min: 4,
-        max: 255
     },
     image_url: {
         type: String,
         min: 4,
         max: 255
-    },
-    target_group: [
-        {
-            type: String,
-            required: true,
-            min: 3,
-            max: 10
-        }
-    ]
+    }
 
 })
 

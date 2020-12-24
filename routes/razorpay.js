@@ -6,6 +6,7 @@ const { route } = require('./home')
 const authenticate = require('./verifyToken')
 const OrderDetails = require('../models/order_details')
 const User = require('../models/user')
+/* const {sendNotificationToVendor} = require('../firebaseNotification.js') */
 
 const razorpay = new Razorpay({
     key_id: 'rzp_test_D0F6z1KC78AFis',
@@ -114,6 +115,8 @@ router.post('/verification', async (req, res) => {
 
             try{
 
+                /* sendNotificationToVendor() */
+
                 const order = await OrderDetails.findOne({order_id: order_id})
                 const updatedOrder = await OrderDetails.findByIdAndUpdate({_id: order._id}, update)
                 return res.send(updatedOrder)
@@ -167,7 +170,7 @@ router.patch('/order/update', authenticate, async (req,res) => {
     try{
 
         const order = await OrderDetails.findOne({order_id: req.body.order_id})
-        const updatedOrder = await OrderDetails.findByIdAndUpdate({_id: order._id}, update)
+        const updatedOrder = await OrderDetails.findByIdAndUpdate({_id: order._id}, update, {useFindAndModify: false})
         return res.send(updatedOrder)
 
     } catch(err) {

@@ -111,12 +111,13 @@ router.patch('/vendor/update/:email', authenticate, isAdmin, async (req, res) =>
 
 })
 
-router.get('/order/history', authenticate, async (req, res) => {
+//get all order history
+router.get('/order/history', authenticate, isAdmin, async (req, res) => {
 
     try{
 
         const orders = await OrderDetails.find()
-        console.log(orders)
+        /* console.log(orders) */
         res.json(orders)
 
     } catch(err) {

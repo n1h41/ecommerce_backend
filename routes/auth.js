@@ -57,12 +57,13 @@ router.post('/login', async (req, res) => {
     //create and assign a jwt token
     const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET)
     var d = new Date()
-    console.log(`\nUser: '${user.name}' Logged In At\nDate: ${d.getDate()}:${d.getMonth()}:${d.getFullYear()}\nTime: ${d.getHours()}:${d.getMinutes()}\n***************************`)
+    /* console.log(`\nUser: '${user.name}' Logged In At\nDate: ${d.getDate()}:${d.getMonth()}:${d.getFullYear()}\nTime: ${d.getHours()}:${d.getMinutes()}\n***************************`) */
     return res.header('auth-token', token).json({
         'name': user.name,
         'email': user.email,
         'role': user.role,
-        'pincode': user.pincode
+        'pincode': user.pincode,
+        'id': user._id
     })
 })
 

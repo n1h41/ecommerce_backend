@@ -5,6 +5,14 @@ const OrderDetails = require('../models/order_details')
 const multer = require('multer')
 const path = require('path')
 
+/* const admin = require("firebase-admin");
+
+const serviceAccount = require("../notifications-b1bc2-firebase-adminsdk-2y0c7-c118195f37.json");
+
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+}); */
+
 //adding category
 router.get('/test', async (req, res) => {
 
@@ -20,7 +28,7 @@ router.get('/test', async (req, res) => {
     }
     catch (err) {
 
-        if(err.code == 11000) return res.status(400).send(`The category '${req.query.q}' already exists in Application. Please select it from dropdown menu.`)
+        if (err.code == 11000) return res.status(400).send(`The category '${req.query.q}' already exists in Application. Please select it from dropdown menu.`)
         else return res.status(400).send(err)
 
     }
@@ -34,7 +42,7 @@ router.get('/test/2', async (req, res) => {
 
         category = await Category.findOne({ category_name: req.query.q })
 
-        if(!category) return res.status(400).send(`The category ${req.query.q} doesn't exist. Please add the category.`)
+        if (!category) return res.status(400).send(`The category ${req.query.q} doesn't exist. Please add the category.`)
 
     }
     catch (err) {
@@ -69,16 +77,16 @@ router.get('/test/2', async (req, res) => {
 router.get('/test/3', async (req, res) => {
 
     /* res.send(req.query.q) */
-    try{
+    try {
 
-        deletedCategory = await Category.findOneAndRemove({category_name: req.query.q})
+        deletedCategory = await Category.findOneAndRemove({ category_name: req.query.q })
 
-        if(!deletedCategory) return res.status(400).send(`The category '${req.query.q}' doesn't exist.`)
+        if (!deletedCategory) return res.status(400).send(`The category '${req.query.q}' doesn't exist.`)
 
         res.send(deletedCategory)
 
     }
-    catch(err){
+    catch (err) {
 
         res.status(400).send(err)
 
@@ -109,14 +117,14 @@ router.post('/add/date', async (req, res) => {
     req.body.date = Date.now()
 
     const order = new OrderDetails(req.body)
-    
-    try{
+
+    try {
 
         const savedOrder = await order.save()
         console.log(savedOrder)
 
     }
-    catch(err){
+    catch (err) {
 
         res.status(400).send(err)
 
@@ -127,12 +135,12 @@ router.post('/add/date', async (req, res) => {
 //get order details for admin
 router.get('/order/history', async (req, res) => {
 
-    try{
+    try {
 
         const orders = await OrderDetails.find()
         res.json(orders)
 
-    } catch(err) {
+    } catch (err) {
 
         res.status(400).json({
             error: err
@@ -141,5 +149,28 @@ router.get('/order/history', async (req, res) => {
     }
 
 })
+
+/* router.get('/messaging', async (req, res) => {
+
+    var registrationToken = 'dizB6iLsTyuLGZms-axIHS:APA91bGx-vzoJ983HrCdHwiQbwrsPIUgstHbXDT83GVUawcd3W4yOUb5IGDI6EvivtBEyKH6ql3KaIsKKr5oDLEMyRWt7e625lljLSCoqMRma3R7ne8o7XIFXyVGl7zpH4qZP53pDt6a';
+
+    var message = {
+        notification: {
+            title: 'From Server',
+            body: 'Hello'
+        },
+        token: registrationToken
+    }
+
+    admin.messaging().send(message)
+        .then((response) => {
+            // Response is a message ID string.
+            console.log('Successfully sent message:', response);
+        })
+        .catch((error) => {
+            console.log('Error sending message:', error);
+        });
+
+}) */
 
 module.exports = router
