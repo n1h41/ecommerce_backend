@@ -53,24 +53,45 @@ router.patch('/setUserId', async (req, res) => {
 // Send Notification to devices
 router.post('/send', authenticate, async (req, res) => {
   var registrationTokens = []
-  try {
-    //sending notification to all users
-    if (req.body.target == 'all') {
+
+  //sending notification to all users
+  
+  if (req.body.target == 'all') {
+    try {
       const firebaseDocs = await FirebaseToken.find()
-      for (var i = 0; i < firebaseDocs.length; i++) {
-        registrationTokens.push(firebaseDocs[i]['firebase_device_token'])
-      }
-    } else if (req.body.target == 'vendors') {
-      //sending notification to all vendors
+    } catch (err) {
+      return res.status(400).send(err)
+    }
+    for (var i = 0; i < firebaseDocs.length; i++) {
+      registrationTokens.push(firebaseDocs[i]['firebase_device_token'])
+    }
+    var message = {
+      notification: req.body.notification,
+      tokens: registrationTokens
+    }
+    sendMessage(message)
+  } else if (req.body.target == 'vendors') {
+    //sending notification to all vendors
+    try {
       const vendorList = await User.find({ role: 'vendor' })
-      for (var i = 0; i < vendorList.length; i++) {
-        const token = await FirebaseToken.findOne({ user_id: vendorList[i]['_id'] })
-        if (token) registrationTokens.push(token['firebase_device_token'])
-      }
-    } else {
-      req.body.data.forEach(async element => {
+    } catch (err) {
+      return res.status(400).send(err)
+    }
+    for (var i = 0; i < vendorList.length; i++) {
+      const token = await FirebaseToken.findOne({ user_id: vendorList[i]['_id'] })
+      if (token) registrationTokens.push(token['firebase_device_token'])
+    }
+    var message = {
+      notification: req.body.notification,
+      tokens: registrationTokens
+    }
+    sendMessage(message)
+  } else {
+    req.body.data.forEach(async element => {
+      try {
         const token = await FirebaseToken.findOne({ user_id: element.vendor })
         if (token) {
+
           registrationTokens.push(token['firebase_device_token'])
           var message = {
             notification: {
@@ -84,56 +105,30 @@ router.post('/send', authenticate, async (req, res) => {
             },
             tokens: registrationTokens
           }
-          /* admin.messaging().sendMulticast(message)
-            .then((response) => {
-              console.log('Successfully sent message:', response);
-            })
-            .catch((error) => {
-              console.log('Error sending message:', error);
-            }); */
-
-
-
+          sendMessage(message)
           const notif = new Notification({
             target: `${element.vendor}`,
             content: message
           })
-
-          try {
-
-            const savedNotif = await notif.save()
-            return res.json({ status: 'OK', notification: savedNotif })
-
-          } catch (err) {
-
-            return res.status(400).json(err)
-
-          }
+          const savedNotif = await notif.save()
+          return res.json({ status: 'OK', notification: savedNotif })
         }
-      })
-    }
-
-    var message = {
-      notification: req.body.notification,
-      tokens: registrationTokens
-    }
-
-    admin.messaging().sendMulticast(message)
-      .then((response) => {
-        console.log('Successfully sent message:', response);
-      })
-      .catch((error) => {
-        console.log('Error sending message:', error);
-      });
-
-    return res.json({
-      'Notification status': 'OK'
+      } catch (err) {
+        return res.status(400).send(err)
+      }
     })
-
-  } catch (err) {
-    return console.log(err)
   }
 })
+
+function sendMessage(message) {
+  admin.messaging().sendMulticast(message)
+    .then((response) => {
+      console.log('Successfully sent message:', response);
+    })
+    .catch((error) => {
+      console.log('Error sending message:', error);
+    });
+}
 
 /* function sendNotificationToVendor() {
 
