@@ -38,6 +38,6 @@ app.use('/api/firebase', firebaseNotification)
 
 app.use('', testRoute)
 
-app.listen(3000, () => {
+app.listen(process.env.PORT || 3000, () => {
     console.log('Server running at http://127.0.0.1:3000')
 })
