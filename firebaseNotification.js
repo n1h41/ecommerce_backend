@@ -51,7 +51,7 @@ router.patch('/setUserId', async (req, res) => {
 })
 
 // Send Notification to devices
-router.post('/send', authenticate, async (req, res) => {
+router.post('/send'/* , authenticate */, async (req, res) => {
   var registrationTokens = []
 
   //sending notification to all users
@@ -59,33 +59,35 @@ router.post('/send', authenticate, async (req, res) => {
   if (req.body.target == 'all') {
     try {
       const firebaseDocs = await FirebaseToken.find()
+      for (var i = 0; i < firebaseDocs.length; i++) {
+        registrationTokens.push(firebaseDocs[i]['firebase_device_token'])
+      }
+      var message = {
+        notification: req.body.notification,
+        tokens: registrationTokens
+      }
+      sendMessage(message)
     } catch (err) {
       return res.status(400).send(err)
     }
-    for (var i = 0; i < firebaseDocs.length; i++) {
-      registrationTokens.push(firebaseDocs[i]['firebase_device_token'])
-    }
-    var message = {
-      notification: req.body.notification,
-      tokens: registrationTokens
-    }
-    sendMessage(message)
+    
   } else if (req.body.target == 'vendors') {
     //sending notification to all vendors
     try {
       const vendorList = await User.find({ role: 'vendor' })
+      for (var i = 0; i < vendorList.length; i++) {
+        const token = await FirebaseToken.findOne({ user_id: vendorList[i]['_id'] })
+        if (token) registrationTokens.push(token['firebase_device_token'])
+      }
+      var message = {
+        notification: req.body.notification,
+        tokens: registrationTokens
+      }
+      sendMessage(message)
     } catch (err) {
       return res.status(400).send(err)
     }
-    for (var i = 0; i < vendorList.length; i++) {
-      const token = await FirebaseToken.findOne({ user_id: vendorList[i]['_id'] })
-      if (token) registrationTokens.push(token['firebase_device_token'])
-    }
-    var message = {
-      notification: req.body.notification,
-      tokens: registrationTokens
-    }
-    sendMessage(message)
+    
   } else {
     req.body.data.forEach(async element => {
       try {

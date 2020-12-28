@@ -191,7 +191,7 @@ Content-Type: application/json
         "title": "From Admin",
         "body": "To all vendors"
     },
-    "target": "vendors"
+    "target": "all"
 }
 
 ### Get Notifications for vendors
