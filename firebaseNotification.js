@@ -37,8 +37,10 @@ router.patch('/setUserId', async (req, res) => {
 
   /* console.log(req.query.token) */
 
+  /* console.log(req.body.token) */
+
   try {
-    const firebaseDetailsDocument = await FirebaseToken.findOne({ firebase_device_token: 'dizB6iLsTyuLGZms-axIHS:APA91bGx-vzoJ983HrCdHwiQbwrsPIUgstHbXDT83GVUawcd3W4yOUb5IGDI6EvivtBEyKH6ql3KaIsKKr5oDLEMyRWt7e625lljLSCoqMRma3R7ne8o7XIFXyVGl7zpH4qZP53pDt6a' })
+    const firebaseDetailsDocument = await FirebaseToken.findOne({ firebase_device_token: req.body.token })
     const firebaseDetailsDocumentUpdated = await FirebaseToken.findByIdAndUpdate({ _id: firebaseDetailsDocument._id }, req.body, { useFindAndModify: false })
     console.log(firebaseDetailsDocumentUpdated)
     res.json({

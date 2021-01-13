@@ -183,7 +183,7 @@ Content-Type: application/json
 }
 
 ### Send Notifications
-POST http://127.0.0.1:3000/api/firebase/send HTTP/1.1
+POST https://n1h41.herokuapp.com/api/firebase/send HTTP/1.1
 Content-Type: application/json
 
 {
