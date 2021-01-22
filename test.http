@@ -183,21 +183,42 @@ Content-Type: application/json
 }
 
 ### Send Notifications
-POST https://n1h41.herokuapp.com/api/firebase/send HTTP/1.1
+POST http://127.0.0.1:3000/api/firebase/send HTTP/1.1
 Content-Type: application/json
 
 {
+    "data": [
+        {"vendor": "5fae76fb1f38d715f891a421"
+        }
+    ],
     "notification": {
-        "title": "From Admin",
-        "body": "To all vendors"
+        "title": "Hai",
+        "body": "Private"
     },
-    "target": "all"
+    "target": "individual"
 }
 
 ### Get Notifications for vendors
 GET http://127.0.0.1:3000/api/vendor/notification HTTP/1.1
 Content-Type: application/json
+auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmFlNzZmYjFmMzhkNzE1Zjg5MWE0MjEiLCJpYXQiOjE2MTA2NDg0NDl9.d_zRDAd8kLwXNxwjPlI_yagV7UKlkEeQ315m1eh4s9E
+###
+POST http://127.0.0.1:3000/api/admin/delivery-boys/add HTTP/1.1
+Content-Type: application/json
 
 {
-    "user_id": "5fae76fb1f38d715f891a421"
+    "name":"Test Delivery Boy",
+    "email":"delivery@gmail.com",
+    "password":"12345678",
+    "mobileNumber":7559865386,
+    "pincode":673601,
+    "role":"delivery_boy"
 }
+###
+GET http://127.0.0.1:3000/api/vendor/delivery-boys/list HTTP/1.1
+auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmFlNzZmYjFmMzhkNzE1Zjg5MWE0MjEiLCJpYXQiOjE2MTA5NzgxMTl9.jIoXUf5B6hpw1PYWeNjHkSQhqjPf3nDG-xK7AVGk29Q
+###
+GET http://127.0.0.1:3000/api/home/notification/list HTTP/1.1
+auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmFlNzZmYjFmMzhkNzE1Zjg5MWE0MjEiLCJpYXQiOjE2MTA5NzgxMTl9.jIoXUf5B6hpw1PYWeNjHkSQhqjPf3nDG-xK7AVGk29Q
+### Send Order Details to Delivery Boy
+POST http://127.0.0.1:3000/api/firebase/send/orderDetails/deliveryBoy?q=1234567890 HTTP/1.1

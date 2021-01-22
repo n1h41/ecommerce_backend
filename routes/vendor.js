@@ -8,7 +8,7 @@ const { isVendor } = require('./verifyUserRole')
 const fs = require('fs')
 const Category = require('../models/category')
 const Notification = require('../models/notifications')
-const { json } = require('express')
+const User = require('../models/user')
 
 //storage setup for uploading images
 const storage = multer.diskStorage({
@@ -40,7 +40,7 @@ router.post('/addproducts', authenticate, isVendor, upload.array('product-image'
     //adding product with category value taken from category document in the database
     try {
         category = await Category.findOne({ category_name: req.body.category })
-        if(!category) return res.status(400).send(`The category ${req.query.q} doesn't exist. Please add the category.`)
+        if (!category) return res.status(400).send(`The category ${req.query.q} doesn't exist. Please add the category.`)
     }
     catch (err) {
         return res.status(400).send(err)
@@ -130,11 +130,11 @@ router.patch('/products/update/:id', authenticate, isVendor, async (req, res) =>
     //To remove null key:value from the json
     const removeEmptyOrNull = (obj) => {
         Object.keys(obj).forEach(k =>
-          (obj[k] && typeof obj[k] === 'object') && removeEmptyOrNull(obj[k]) ||
-          (!obj[k] && obj[k] !== undefined) && delete obj[k]
+            (obj[k] && typeof obj[k] === 'object') && removeEmptyOrNull(obj[k]) ||
+            (!obj[k] && obj[k] !== undefined) && delete obj[k]
         );
         return obj;
-      };
+    };
     req.body = removeEmptyOrNull(req.body)
     /* console.log(req.body)
     console.log(req.params.id) */
@@ -151,7 +151,7 @@ router.patch('/products/update/:id', authenticate, isVendor, async (req, res) =>
             if (product_id == product_list[i]._id) {
                 // updating product details
                 updated_product = await Product.findByIdAndUpdate(product_id, updates, { useFindAndModify: false })
-                if(!updated_product) return res.status(400).send("Product not available")
+                if (!updated_product) return res.status(400).send("Product not available")
                 flag = 1
                 res.send(updated_product)
             }
@@ -167,7 +167,7 @@ router.patch('/products/update/:id', authenticate, isVendor, async (req, res) =>
 
 //add new category
 router.post('/add-category', async (req, res) => {
-    
+
     const category = new Category({
         category_name: req.body.category
     })
@@ -180,7 +180,7 @@ router.post('/add-category', async (req, res) => {
     }
     catch (err) {
 
-        if(err.code == 11000) return res.status(400).send(`The category '${req.body.category}' already exists in Application. Please select it from dropdown menu.`)
+        if (err.code == 11000) return res.status(400).send(`The category '${req.body.category}' already exists in Application. Please select it from dropdown menu.`)
         else return res.status(400).send(err)
 
     }
@@ -188,7 +188,7 @@ router.post('/add-category', async (req, res) => {
 })
 
 //get all all available categories
-router.get('/category',authenticate , async (req, res) => {
+router.get('/category', authenticate, async (req, res) => {
 
     const category = await Category.find()
     res.send(category)
@@ -197,8 +197,22 @@ router.get('/category',authenticate , async (req, res) => {
 
 router.get('/notification', authenticate, async (req, res) => {
 
-    const notif = await Notification.find({target: req.user._id})
+    const notif = await Notification.find({ target: req.user._id })
     res.send(notif)
+
+})
+
+//get available delivery boys details
+router.get('/delivery-boys/list', authenticate, async (req, res) => {
+
+    try {
+
+        const deliveryBoysList = await User.find({role: 'delivery_boy', availability: true, onDelivery: false, pincode: req.user.pincode}, { mobileNumber: 1, name: 1, _id: 0, pincode: 1 })
+        res.json(deliveryBoysList)
+
+    } catch (err) {
+        res.status(400).json(err)
+    }
 
 })
 

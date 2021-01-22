@@ -4,15 +4,15 @@ const { isAdmin } = require('./verifyUserRole')
 const User = require('../models/user')
 const OrderDetails = require('../models/order_details')
 const { userValidation } = require('../validation')
+const { deliveryBoyValidation } = require('../validation')
 const bcrypt = require('bcryptjs')
-const { json } = require('express')
 
 router.get('/vendor/list', authenticate, isAdmin, async (req, res) => {
 
     try {
         //get list of vendors
         const vendorList = await User.find({ role: 'vendor' })
-        if(vendorList == null) return res.status(400).send("No vendors registered")
+        if (vendorList == null) return res.status(400).send("No vendors registered")
         return res.send(vendorList)
 
     }
@@ -28,11 +28,11 @@ router.post('/vendor/add', authenticate, isAdmin, async (req, res) => {
     //To remove null key:value from the json
     const removeEmptyOrNull = (obj) => {
         Object.keys(obj).forEach(k =>
-          (obj[k] && typeof obj[k] === 'object') && removeEmptyOrNull(obj[k]) ||
-          (!obj[k] && obj[k] !== undefined) && delete obj[k]
+            (obj[k] && typeof obj[k] === 'object') && removeEmptyOrNull(obj[k]) ||
+            (!obj[k] && obj[k] !== undefined) && delete obj[k]
         );
         return obj;
-      };
+    };
     req.body = removeEmptyOrNull(req.body)
 
     //vendor details validation
@@ -64,7 +64,7 @@ router.delete('/vendor/delete/:email', authenticate, isAdmin, async (req, res) =
     try {
 
         const deleteVendor = await User.findOneAndDelete({ email: req.params.email })
-        if( deleteVendor == null ) return res.status(400).send("Vendor doesn't exist.")
+        if (deleteVendor == null) return res.status(400).send("Vendor doesn't exist.")
         res.send(deleteVendor)
 
     }
@@ -81,14 +81,14 @@ router.patch('/vendor/update/:email', authenticate, isAdmin, async (req, res) =>
     //To remove null key:value from the json
     const removeEmptyOrNull = (obj) => {
         Object.keys(obj).forEach(k =>
-          (obj[k] && typeof obj[k] === 'object') && removeEmptyOrNull(obj[k]) ||
-          (!obj[k] && obj[k] !== undefined) && delete obj[k]
+            (obj[k] && typeof obj[k] === 'object') && removeEmptyOrNull(obj[k]) ||
+            (!obj[k] && obj[k] !== undefined) && delete obj[k]
         );
         return obj;
-      };
+    };
     req.body = removeEmptyOrNull(req.body)
 
-    if (req.body.hasOwnProperty('password')){
+    if (req.body.hasOwnProperty('password')) {
 
         const salt = await bcrypt.genSalt(10)
         const hashedPassword = await bcrypt.hash(req.body.password, salt)
@@ -98,7 +98,7 @@ router.patch('/vendor/update/:email', authenticate, isAdmin, async (req, res) =>
     try {
 
         const updatedVendor = await User.findOneAndUpdate({ email: req.params.email }, req.body, { useFindAndModify: false })
-        if(updatedVendor == null) return res.status(400).send("Vendor doesn't exist")
+        if (updatedVendor == null) return res.status(400).send("Vendor doesn't exist")
         return res.send(updatedVendor)
 
     }
@@ -114,18 +114,44 @@ router.patch('/vendor/update/:email', authenticate, isAdmin, async (req, res) =>
 //get all order history
 router.get('/order/history', authenticate, isAdmin, async (req, res) => {
 
-    try{
+    try {
 
         const orders = await OrderDetails.find()
         /* console.log(orders) */
         res.json(orders)
 
-    } catch(err) {
+    } catch (err) {
 
         res.status(400).json({
             error: err
         })
 
+    }
+
+})
+
+//add delivery boy
+router.post('/delivery-boys/add', async (req, res) => {
+
+    const { error } = deliveryBoyValidation(req.body)
+    if (error) return res.status(400).json(error)
+
+    const salt = await bcrypt.genSalt(10)
+    const hashedPassword = await bcrypt.hash(req.body.password, salt)
+    req.body.password = hashedPassword
+
+    const user = new User(req.body)
+
+    const emailExist = await User.findOne({ email: req.body.email })
+    if (emailExist) return res.status(400).send('Delivery boy with this email already exist')
+    
+    try {
+
+        const savedData = await user.save()
+        console.log(savedData)
+        
+    } catch (err) {
+        return res.status(400).json(err)
     }
 
 })

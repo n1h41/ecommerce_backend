@@ -1,3 +1,4 @@
+const { boolean } = require('@hapi/joi')
 const mongoose = require('mongoose')
 
 const userSchema = new mongoose.Schema({
@@ -29,6 +30,18 @@ const userSchema = new mongoose.Schema({
         type: Number,
         required: true,
         min: 6,
+    },
+    mobileNumber: {
+        type: Number,
+        min: 10,
+    },
+    availability: {
+        type: Boolean,
+        default: true,
+    },
+    onDelivery: {
+        type: Boolean,
+        default: false,
     }
 })
 

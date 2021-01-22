@@ -99,8 +99,8 @@ router.post('/send'/* , authenticate */, async (req, res) => {
           registrationTokens.push(token['firebase_device_token'])
           var message = {
             notification: {
-              title: `${element.product_name} purchased by ${req.user.email}`,
-              body: `Quantity: ${element.qty} X Price: ${element.price}`
+              title:`${element.product_name} purchased by ${req.user.email}`,
+              body:`Quantity: ${element.qty} X Price: ${element.price}`
             },
             data: {
               address: req.body.address,
@@ -124,6 +124,29 @@ router.post('/send'/* , authenticate */, async (req, res) => {
   }
 })
 
+router.post('/send/orderDetails/deliveryBoy', async (req, res) => {
+  /* console.log(req.body) */
+  try {
+    const user = await User.findOne({mobileNumber: req.query.q}, {name: 1})
+    const token = await FirebaseToken.findOne({user_id: user._id}, {firebase_device_token: 1, _id: 0})
+    var message = {
+      notification: {
+        title:`New Delivery`,
+        body:`${req.body.content.notification.title}`
+      },
+      data: {
+        address: `${req.body.content.data.address}`,
+        qty: `${req.body.content.data.qty}`,
+        price: `${req.body.content.data.price}`
+      },
+      tokens: [token.firebase_device_token]
+    }
+    sendMessage(message)
+  } catch (err) {
+    return res.status(400).json(err)
+  }
+})
+
 function sendMessage(message) {
   admin.messaging().sendMulticast(message)
     .then((response) => {
@@ -133,12 +156,6 @@ function sendMessage(message) {
       console.log('Error sending message:', error);
     });
 }
-
-/* function sendNotificationToVendor() {
-
-
-
-} */
 
 module.exports = router
 /* module.exports.sendNotificationToVendor = sendNotificationToVendor */

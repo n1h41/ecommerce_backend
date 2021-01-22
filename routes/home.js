@@ -1,7 +1,8 @@
 const router = require('express').Router()
 const Products = require('../models/product')
+const Notification = require('../models/notifications')
 const authenticate = require('./verifyToken')
-router.get('/home', authenticate, async (req, res) => {
+router.get('', authenticate, async (req, res) => {
     try{
         if(req.query.category == 'default'){
             const productList = await Products.find({pincode: req.query.pincode})
@@ -19,7 +20,7 @@ router.get('/home', authenticate, async (req, res) => {
 })
 
 // Product Search Funtionality
-router.get('/home/items', async (req, res) => {
+router.get('/items', async (req, res) => {
 
     try{
         searchResult = await Products.find({ product_name : new RegExp(req.query.search, "i"), pincode: req.query.pincode})
@@ -30,6 +31,14 @@ router.get('/home/items', async (req, res) => {
     catch(err){
         res.status(400).send(err)
     }
+
+})
+
+// Get Notification List
+router.get('/notification/list', authenticate, async (req, res) => {
+
+    const notifList = await Notification.find({target: req.user._id})
+    res.send(notifList)
 
 })
 

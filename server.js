@@ -30,7 +30,7 @@ app.use(express.json({ extended: false}))
 app.use('/images', express.static('./uploads/images'))
 
 app.use('/api', authRoute)
-app.use('/api', homeRoute)
+app.use('/api/home', homeRoute)
 app.use('/api/vendor', vendorRoute)
 app.use('/api/admin', adminRoute)
 app.use('/api/razorpay', razorpay)
