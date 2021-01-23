@@ -222,3 +222,24 @@ GET http://127.0.0.1:3000/api/home/notification/list HTTP/1.1
 auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmFlNzZmYjFmMzhkNzE1Zjg5MWE0MjEiLCJpYXQiOjE2MTA5NzgxMTl9.jIoXUf5B6hpw1PYWeNjHkSQhqjPf3nDG-xK7AVGk29Q
 ### Send Order Details to Delivery Boy
 POST http://127.0.0.1:3000/api/firebase/send/orderDetails/deliveryBoy?q=1234567890 HTTP/1.1
+###
+GET http://127.0.0.1:3000/api/home/logout HTTP/1.1
+auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmFlNzZmYjFmMzhkNzE1Zjg5MWE0MjEiLCJpYXQiOjE2MTA5NzgxMTl9.jIoXUf5B6hpw1PYWeNjHkSQhqjPf3nDG-xK7AVGk29Q
+###
+GET http://127.0.0.1:3000/promise HTTP/1.1
+auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmFlNzZmYjFmMzhkNzE1Zjg5MWE0MjEiLCJpYXQiOjE2MTA5NzgxMTl9.jIoXUf5B6hpw1PYWeNjHkSQhqjPf3nDG-xK7AVGk29Q
+###
+POST https://tcshackquest.com/covidwarriors/programminginterface/checkpatient HTTP/1.1
+Host: tcshackquest.com
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Referer: https://tcshackquest.com/home
+Cookie: hackquest_5_session=eyJpdiI6IjNpc1pxQVF6bkFBNTVPN2pOMmhaWHc9PSIsInZhbHVlIjoiWURKYVwvekxhNmdkVnlzQmlvWkpzOUVGTkxxQTQ3cWVEc056bGNwcGZTcXo4dVZwZXFzQlE4VFFoXC9uXC9GVWRsZGdkKzVhXC9uMUtqaFk5WnNHRlV5bVBPbURZdzdWS1RMXC9kcmROd3RqbStaMko3Ujhic0pxY2J0ZCswelRsU0RsdSIsIm1hYyI6IjI4OWY4NjA4YzIwZGI4MTEwN2ZhY2Y5ODkzYjU5ODNjODExMWY0OTkwNjNjMzQ5YWFmZDBkYTg5OGVhNWNjNWMifQ%3D%3D; XSRF-TOKEN=eyJpdiI6InR5dzRJSXA3enZ1Wk1mbFBhXC9NNzNRPT0iLCJ2YWx1ZSI6Ik9EMm44UjBNRmtjOWR2Rk5tM2c5dk1pQ3A4OEhCQXBmTEtvYThjekp3VFRcL2dxMndnZXU0bzZiSlhlVzk4ZGd2U0NDSkpKbjlTNW16TDRsZkhFRUtrbG5XaWJpaEtwSVZIcmV3MWZTMkV0S01KUTJJQUlZWVwvTTg3OGoyejJoVVciLCJtYWMiOiIzZTYxMDI4N2EwNDRkZGNjY2MwNTU4NzBjYTNlZTIyY2ExYTVlOTA5NGZmNjNiZTFmNWE2Yzc0NDYyMmZlMTAwIn0%3D
+Connection: close
+Upgrade-Insecure-Requests: 1
+Cache-Control: max-age=0
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 15
+
+patientID=false

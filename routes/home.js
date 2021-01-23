@@ -1,7 +1,10 @@
 const router = require('express').Router()
 const Products = require('../models/product')
 const Notification = require('../models/notifications')
+const FirebaseToken = require('../models/firebaseToken')
+const User = require('../models/user')
 const authenticate = require('./verifyToken')
+const firebaseToken = require('../models/firebaseToken')
 router.get('', authenticate, async (req, res) => {
     try{
         if(req.query.category == 'default'){
@@ -40,6 +43,18 @@ router.get('/notification/list', authenticate, async (req, res) => {
     const notifList = await Notification.find({target: req.user._id})
     res.send(notifList)
 
+})
+
+//Logout
+router.get('/logout', authenticate, async (req, res) => {
+    try {
+        
+        const doc = await firebaseToken.findOneAndDelete({user_id: req.user._id})
+        console.log(`${req.user.name} logged Out`,doc)
+
+    } catch (err) {
+        res.status(400).send(err)
+    }
 })
 
 module.exports = router

@@ -4,6 +4,7 @@ const Category = require('../models/category')
 const OrderDetails = require('../models/order_details')
 const multer = require('multer')
 const path = require('path')
+const authenticate = require('../routes/verifyToken')
 
 /* const admin = require("firebase-admin");
 
@@ -150,27 +151,9 @@ router.get('/order/history', async (req, res) => {
 
 })
 
-/* router.get('/messaging', async (req, res) => {
-
-    var registrationToken = 'dizB6iLsTyuLGZms-axIHS:APA91bGx-vzoJ983HrCdHwiQbwrsPIUgstHbXDT83GVUawcd3W4yOUb5IGDI6EvivtBEyKH6ql3KaIsKKr5oDLEMyRWt7e625lljLSCoqMRma3R7ne8o7XIFXyVGl7zpH4qZP53pDt6a';
-
-    var message = {
-        notification: {
-            title: 'From Server',
-            body: 'Hello'
-        },
-        token: registrationToken
-    }
-
-    admin.messaging().send(message)
-        .then((response) => {
-            // Response is a message ID string.
-            console.log('Successfully sent message:', response);
-        })
-        .catch((error) => {
-            console.log('Error sending message:', error);
-        });
-
-}) */
+//Promises
+router.get('/promise', authenticate, (req, res) => {
+    res.send(req.user)
+})
 
 module.exports = router
