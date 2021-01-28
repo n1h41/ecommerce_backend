@@ -3,6 +3,7 @@ const Products = require('../models/product')
 const Notification = require('../models/notifications')
 const FirebaseToken = require('../models/firebaseToken')
 const User = require('../models/user')
+const DeliveryData = require('../models/deliveryBoy')
 const authenticate = require('./verifyToken')
 const firebaseToken = require('../models/firebaseToken')
 router.get('', authenticate, async (req, res) => {
@@ -46,12 +47,32 @@ router.get('/notification/list', authenticate, async (req, res) => {
 })
 
 //Logout
-router.get('/logout', authenticate, async (req, res) => {
+router.post('/logout', authenticate, async (req, res) => {
     try {
-        
-        const doc = await firebaseToken.findOneAndDelete({user_id: req.user._id})
-        console.log(`${req.user.name} logged Out`,doc)
+        const doc = await firebaseToken.findOneAndDelete({user_id: req.user._id}, { useFindAndModify: false })
+        console.log(`${req.user.name} logged Out\n`,doc)
+    } catch (err) {
+        res.status(400).send(err)
+    }
+})
 
+//Get delivery details for delivery Boy
+router.get('/deliveryDetails', authenticate, async (req, res) => {
+    try {
+        const data = await DeliveryData.find({user_id: req.user._id})
+        res.send(data)
+    } catch (err) {
+        res.status(400).send(err)
+    }
+})
+
+//Update Delivery status
+router.post('/deliveryDetails/update', authenticate, async (req, res) => {
+    /* console.log(req) */
+    try {
+        const data = await DeliveryData.findByIdAndUpdate(req.body.id, req.body.update)
+        console.log(data)
+        return res.status(200).json({status:'OK'})
     } catch (err) {
         res.status(400).send(err)
     }

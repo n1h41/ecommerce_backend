@@ -1,38 +1,20 @@
+const { object } = require('@hapi/joi')
 const mongoose = require('mongoose')
 
-const deliveryBoySchema = new mongoose.Schema({
-    name: {
+const deliveryDataSchema = new mongoose.Schema({
+    user_id: {
         type: String,
         required: true,
-        min: 6,
-        max: 255
     },
-    mobileNumber: {
-        type: Number,
+    message: {
+        type: Object,
         required: true,
-        min: 10
     },
-    pincode: {
-        type: Number,
-        required: true,
-        min: 6,
-    },
-    address: {
-        type: String,
-        required: true,
-        min: 6,
-        max: 255
-    },
-    availablitiy: {
+    delivered: {
         type: Boolean,
         required: true,
-        default: true,
-    },
-    isOnDelivery: {
-        type: Boolean,
-        required: true,
-        default: false,
+        default: false
     }
 })
 
-module.exports = mongoose.model('DeliveryBoy', deliveryBoySchema)
+module.exports = mongoose.model('DeliveryData', deliveryDataSchema)
