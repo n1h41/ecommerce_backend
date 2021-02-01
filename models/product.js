@@ -14,6 +14,11 @@ const productSchema = new mongoose.Schema({
         required: true,
         min: 1
     },
+    offer_price: {
+        type: Number,
+        required: true,
+        min: 1
+    },
     image_url: [
         { 
             type: String,

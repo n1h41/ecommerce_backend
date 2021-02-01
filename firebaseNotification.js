@@ -5,7 +5,8 @@ const FirebaseToken = require('./models/firebaseToken')
 const User = require('./models/user')
 const DeliveryData = require('./models/deliveryBoy')
 const Notification = require('./models/notifications')
-const authenticate = require('./routes/verifyToken')
+const authenticate = require('./routes/verifyToken');
+const { not } = require('@hapi/joi');
 
 // Initializing Firebase Admin to start sending messages
 admin.initializeApp({
@@ -44,7 +45,7 @@ router.patch('/setUserId', async (req, res) => {
 })
 
 // Send Notification to devices
-router.post('/send'/* , authenticate */, async (req, res) => {
+router.post('/send', authenticate, async (req, res) => {
   var registrationTokens = []
 
   //sending notification to all users
@@ -86,7 +87,6 @@ router.post('/send'/* , authenticate */, async (req, res) => {
       try {
         const token = await FirebaseToken.findOne({ user_id: element.vendor })
         if (token) {
-
           registrationTokens.push(token['firebase_device_token'])
           var message = {
             notification: {
@@ -105,6 +105,7 @@ router.post('/send'/* , authenticate */, async (req, res) => {
             target: `${element.vendor}`,
             content: message
           })
+          res.send(notif)
           const savedNotif = await notif.save()
           return res.json({ status: 'OK', notification: savedNotif })
         }

@@ -29,8 +29,9 @@ const deliveryBoyValidation = (data) => {
 
 const productDetailsValidation = (data) => {
     const schema = joi.object({
-        product_name: joi.string().min(3).required(),
+        product_name: joi.string().min(1).required(),
         price: joi.number().required().integer().min(1),
+        offer_price: joi.number().required().integer().min(1),
         /* pincode: joi.number().required().integer().min(6), */
         category: joi.string().min(3).required()
     })

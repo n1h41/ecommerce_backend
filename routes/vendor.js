@@ -27,8 +27,8 @@ router.post('/addproducts', authenticate, isVendor, upload.array('product-image'
     const image_file_names = []
 
     //validation
-    const { error } = productDetailsValidation(req.body)
-    if (error) return res.send(error.details[0].message)
+    /* const { error } = productDetailsValidation(req.body)
+    if (error) return console.log(error.details[0].message) */
 
     //to get file name of each uploaded files
     const image_url_array = []
@@ -49,6 +49,7 @@ router.post('/addproducts', authenticate, isVendor, upload.array('product-image'
     //uploading request data into the model
     const product = new Product({
         product_name: req.body.product_name,
+        offer_price: Number(req.body.offer_price),
         price: Number(req.body.price),
         image_url: image_url_array,
         image_file_name: image_file_names,

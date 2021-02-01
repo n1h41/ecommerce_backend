@@ -34,7 +34,7 @@ POST http://127.0.0.1:3000/api/login HTTP/1.1
 Content-Type: application/json
 
 {
-    "email": "nihal2@gmail.com",
+    "email": "nihalninu25@gmail.com",
     "password": "12345678"
 }
 ### user details update
@@ -231,3 +231,20 @@ auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmFlNzZmYjFmMzhkNzE
 ###
 GET http://127.0.0.1:3000/api/home/deliveryDetails HTTP/1.1
 auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDBlOWQzNDI1NGQzMTNlODgyMjAyM2EiLCJpYXQiOjE2MTE4MjEyMTJ9.-WKQ9qFw--KfVo7RwRnxvETzXMyZfbNRvId_oUekUKU
+###
+POST http://127.0.0.1:3000/api/firebase/send HTTP/1.1
+auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmFlNzZmYjFmMzhkNzE1Zjg5MWE0MjEiLCJpYXQiOjE2MTIxOTAyNjN9.m17TZV8LDXdpkDOmU4Wscnu4op8YP71C0aEHYeDzbIA
+Content-Type: application/json
+
+{
+    "data":[
+        {
+            "vendor":"5fae76fb1f38d715f891a421",
+            "product_name": "Test",
+            "qty": "1",
+            "price": "75"
+        }
+    ],
+    "target": "individual",
+    "address": "test"
+}
