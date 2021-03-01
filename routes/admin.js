@@ -2,6 +2,7 @@ const router = require('express').Router()
 const authenticate = require('./verifyToken')
 const { isAdmin } = require('./verifyUserRole')
 const User = require('../models/user')
+const AboutUs = require('../models/about_us')
 const OrderDetails = require('../models/order_details')
 const { userValidation } = require('../validation')
 const { deliveryBoyValidation } = require('../validation')
@@ -154,6 +155,21 @@ router.post('/delivery-boys/add', async (req, res) => {
         return res.status(400).json(err)
     }
 
+})
+
+//About us
+router.post('/about-us/add', async (req, res) => {
+    /* console.log(req.body) */
+    /* const details = new AboutUs(req.body) */
+    try {
+        const update = await AboutUs.findByIdAndUpdate({_id:'6038d1026056deb5fc3bc7c8'}, req.body, {useFindAndModify: false})
+        console.log(update)
+        return res.json({
+            status: 'OK'
+        })
+    } catch (err) {
+        return res.status(400).send(err)
+    }
 })
 
 module.exports = router

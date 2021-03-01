@@ -1,6 +1,7 @@
 const router = require('express').Router()
 const Products = require('../models/product')
 const Notification = require('../models/notifications')
+const AboutUs = require('../models/about_us')
 const FirebaseToken = require('../models/firebaseToken')
 const User = require('../models/user')
 const DeliveryData = require('../models/deliveryBoy')
@@ -76,6 +77,12 @@ router.post('/deliveryDetails/update', authenticate, async (req, res) => {
     } catch (err) {
         res.status(400).send(err)
     }
+})
+
+//Get About Us details
+router.get('/about-us', async (req, res)=>{
+    const details = await AboutUs.findById({_id: '6038d1026056deb5fc3bc7c8'},{_id: 0})
+    res.send(details)
 })
 
 module.exports = router
