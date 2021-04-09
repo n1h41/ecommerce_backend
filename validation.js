@@ -8,7 +8,9 @@ const userValidation = (data) => {
         password: joi.string().min(6).required(),
         role: joi.string().min(3).required(),
         pincode: joi.number().required().integer().min(6),
-        mobileNumber: joi.number().integer().min(10)
+        mobileNumber: joi.number().integer().min(10).required(),
+        availability: joi.boolean(),
+        onDelivery: joi.boolean()
     })
     return schema.validate(data)
 }
