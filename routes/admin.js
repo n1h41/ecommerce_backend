@@ -114,21 +114,15 @@ router.patch('/vendor/update/:email', authenticate, isAdmin, async (req, res) =>
 
 //get all order history
 router.get('/order/history', authenticate, isAdmin, async (req, res) => {
-
     try {
-
         const orders = await OrderDetails.find()
         /* console.log(orders) */
         res.json(orders)
-
     } catch (err) {
-
         res.status(400).json({
             error: err
         })
-
     }
-
 })
 
 //add delivery boy

@@ -7,6 +7,7 @@ const DeliveryData = require('./models/deliveryBoy')
 const Notification = require('./models/notifications')
 const authenticate = require('./routes/verifyToken');
 const { not } = require('@hapi/joi');
+const OrderDetails = require('./models/order_details');
 
 // Initializing Firebase Admin to start sending messages
 admin.initializeApp({
@@ -135,26 +136,26 @@ router.post('/send/orderDetails/deliveryBoy', async (req, res) => {
     }
     sendMessage(message)
     /* if (isSuccess == true) { */
-      try {
-        /* const deleteData = await Notification.findByIdAndDelete(req.body._id) */
-        const delivery_data = new DeliveryData({
-          user_id: user._id,
-          message: {
-            title: message.notification.body,
-            address: message.data.address,
-            qty: message.data.qty,
-            price: message.data.price
-          }
-        })
-        try {
-          const savedData = await delivery_data.save()
-          return res.json({ status: 'OK' })
-        } catch (err) {
-          return res.status(400).send(err)
+    try {
+      /* const deleteData = await Notification.findByIdAndDelete(req.body._id) */
+      const delivery_data = new DeliveryData({
+        user_id: user._id,
+        message: {
+          title: message.notification.body,
+          address: message.data.address,
+          qty: message.data.qty,
+          price: message.data.price
         }
+      })
+      try {
+        const savedData = await delivery_data.save()
+        return res.json({ status: 'OK' })
       } catch (err) {
-        res.status(400).send(400)
+        return res.status(400).send(err)
       }
+    } catch (err) {
+      res.status(400).send(400)
+    }
     /* } */
   } catch (err) {
     return res.status(400).json(err)
@@ -172,5 +173,42 @@ function sendMessage(message) {
     });
 }
 
+async function sendNotifWebHook(orderId) {
+  try {
+    const orders = await OrderDetails.find({ order_id: orderId })
+    orders.map(async (order) => {
+      var registrationTokens = []
+      console.log(order)
+      const vendorId = await User.findOne({ email: order.vendor }, { _id: 1 })
+      const token = await FirebaseToken.findOne({ user_id: vendorId })
+      console.log(token)
+      if (token) {
+        registrationTokens.push(token['firebase_device_token'])
+        var message = {
+          notification: {
+            title: `${order.item} purchased by ${order.customer}`,
+            body: `Price: ${order.amount}`
+          },
+          data: {
+            address: order.address,
+            price: `${order.amount}`
+          },
+          tokens: registrationTokens
+        }
+        console.log(message)
+        sendMessage(message)
+        const notif = new Notification({
+          target: `${vendorId._id}`,
+          content: message
+        })
+        const savedNotif = await notif.save()
+        return console.log(savedNotif)
+      }
+    })
+  } catch (err) {
+    console.log(err)
+  }
+}
+
 module.exports = router
-/* module.exports.sendNotificationToVendor = sendNotificationToVendor */
+module.exports.sendNotifWebHook = sendNotifWebHook

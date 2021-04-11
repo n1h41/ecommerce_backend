@@ -9,14 +9,12 @@ const orderSchema = new mongoose.Schema({
         min: 6,
         max: 255
     },
-    vendor_list: [
-        {
-            type: String,
-            required: true,
-            min: 6,
-            max: 255
-        }
-    ],
+    vendor: {
+        type: String,
+        required: true,
+        min: 6,
+        max: 255
+    },
     address: {
         type: String,
         required: true,
@@ -35,14 +33,12 @@ const orderSchema = new mongoose.Schema({
         min: 4,
         max: 255
     },
-    items: [
-        {
-            type: String,
-            required: true,
-            min: 4,
-            max: 255
-        }
-    ],
+    item: {
+        type: String,
+        required: true,
+        min: 4,
+        max: 255
+    },
     order_id: {
         type: String,
         required: true,
