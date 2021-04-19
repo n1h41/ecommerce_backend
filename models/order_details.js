@@ -22,9 +22,8 @@ const orderSchema = new mongoose.Schema({
         max: 255
     },
     amount: {
-        type: Number,
+        type: Object,
         required: true,
-        min: 1
     },
     payment_status: {
         default: 'PENDING',

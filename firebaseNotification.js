@@ -174,40 +174,40 @@ function sendMessage(message) {
 }
 
 async function sendNotifWebHook(orderId) {
-  try {
-    const orders = await OrderDetails.find({ order_id: orderId })
-    orders.map(async (order) => {
+  const orders = await OrderDetails.find({ order_id: orderId })
+  orders.forEach(async (order) => {
+    try {
       var registrationTokens = []
-      console.log(order)
       const vendorId = await User.findOne({ email: order.vendor }, { _id: 1 })
+      var message = {
+        notification: {
+          title: `${order.item} purchased by ${order.customer}`,
+          body: `Price: ${order.amount.price * order.amount.qty}`,
+        },
+        data: {
+          address: order.address,
+          price: `${order.amount.price}`,
+          qty: `${order.amount.qty}`
+        }
+      }
+      const notif = new Notification({
+        target: `${vendorId._id}`,
+        content: message
+      })
+      const savedNotif = await notif.save()
+      console.log(savedNotif)
       const token = await FirebaseToken.findOne({ user_id: vendorId })
-      console.log(token)
       if (token) {
         registrationTokens.push(token['firebase_device_token'])
-        var message = {
-          notification: {
-            title: `${order.item} purchased by ${order.customer}`,
-            body: `Price: ${order.amount}`
-          },
-          data: {
-            address: order.address,
-            price: `${order.amount}`
-          },
+        message = {...message,
           tokens: registrationTokens
         }
-        console.log(message)
         sendMessage(message)
-        const notif = new Notification({
-          target: `${vendorId._id}`,
-          content: message
-        })
-        const savedNotif = await notif.save()
-        return console.log(savedNotif)
       }
-    })
-  } catch (err) {
-    console.log(err)
-  }
+    } catch (error) {
+      return console.log(error)
+    }
+  })
 }
 
 module.exports = router

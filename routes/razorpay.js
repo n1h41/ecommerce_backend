@@ -53,7 +53,7 @@ router.post('/order/add', authenticate, async (req, res) => {
     })
     try {
         const savedOrder = await order.save()
-        /* console.log(savedOrder) */
+        console.log(savedOrder)
         return res.sendStatus(200)
     } catch (err) {
         console.log(err)
