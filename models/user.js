@@ -1,4 +1,3 @@
-const { boolean } = require('@hapi/joi')
 const mongoose = require('mongoose')
 
 const userSchema = new mongoose.Schema({
@@ -26,11 +25,13 @@ const userSchema = new mongoose.Schema({
         min: 3,
         max: 8,
     },
-    pincode: {
-        type: Number,
-        required: true,
-        min: 6,
-    },
+    pincode: [
+        {
+            type: Number,
+            required: true,
+            min: 6,
+        }
+    ],
     mobileNumber: {
         type: Number,
         min: 10,

@@ -12,6 +12,7 @@ router.post('/register', async (req, res) => {
     if (req.body.role != 'user') return res.status(400).send('You can only register as "User"')
 
     // validate data before submitting
+    console.log(req.body)
     const { error } = userValidation(req.body)
     if (error) return res.status(400).send(error.details[0].message)
 
@@ -34,10 +35,10 @@ router.post('/register', async (req, res) => {
     })
     try {
         const savedUser = await user.save()
-        res.send(savedUser)
+        return res.send(user).status(200)
     }
     catch (err) {
-        res.status(400).send(err)
+        return res.status(400).send(err)
     }
 })
 

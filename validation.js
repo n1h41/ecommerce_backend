@@ -7,7 +7,7 @@ const userValidation = (data) => {
         email: joi.string().min(6).required().email(),
         password: joi.string().min(6).required(),
         role: joi.string().min(3).required(),
-        pincode: joi.number().required().integer().min(6),
+        pincode: joi.required(),
         mobileNumber: joi.number().integer().min(10).required(),
         availability: joi.boolean(),
         onDelivery: joi.boolean()

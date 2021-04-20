@@ -5,27 +5,29 @@ const AboutUs = require('../models/about_us')
 const DeliveryData = require('../models/deliveryBoy')
 const authenticate = require('./verifyToken')
 const firebaseToken = require('../models/firebaseToken')
+const User = require('../models/user')
 
 router.get('', authenticate, async (req, res) => {
-    try{
-        if(req.query.category == 'default'){
-            const productList = await Products.find({pincode: req.query.pincode})
-            return res.send(productList)
+    try {
+        const vendors = await User.find({pincode: req.query.pincode, role: 'vendor'},{_id: 1})
+        if (req.query.category == 'default') {
+            const products = await Products.find({vendor: {$in: vendors}})
+            return res.send(products).status(200)
+        } else {
+            const products = await Products.find({vendor: {$in: vendors}, category: req.query.category})
+            return res.send(products).status(200)
         }
-        else {
-            const productList = await Products.find({pincode: req.query.pincode, category: req.query.category})
-            return res.send(productList)
-        }  
-    }
-    catch(err){
-        res.send(err)
+    } catch (error) {
+        console.log(error)
+        return res.status(400).send(error)
     }
 })
 
 // Product Search Funtionality
 router.get('/items', async (req, res) => {
     try{
-        searchResult = await Products.find({ product_name : new RegExp(req.query.search, "i"), pincode: req.query.pincode})
+        const vendors = await User.find({pincode: req.query.pincode, role: 'vendor'},{_id: 1})
+        searchResult = await Products.find({ product_name : new RegExp(req.query.search, "i"), vendor: {$in: vendors}})
         if( searchResult.length == 0 ) return res.status(400).send("No product's found")
         else return res.send(searchResult)
     }

@@ -53,7 +53,6 @@ router.post('/addproducts', authenticate, isVendor, upload.array('product-image'
         price: Number(req.body.price),
         image_url: image_url_array,
         image_file_name: image_file_names,
-        pincode: Number(req.user.pincode),
         category: req.body.category,
         vendor: req.user
     })

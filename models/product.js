@@ -31,11 +31,6 @@ const productSchema = new mongoose.Schema({
             required: true
         }
     ],
-    pincode: {
-        type: Number,
-        required: true,
-        min: 5
-    },
     category: {
         type: String
     },

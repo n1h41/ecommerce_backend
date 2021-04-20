@@ -22,11 +22,12 @@ POST http://127.0.0.1:3000/api/register HTTP/1.1
 Content-Type: application/json
 
 {
-    "name": "Update Test",
-    "email": "update@gmail.com",
+    "name": "Vendor2",
+    "email": "vendor2@gmail.com",
     "password": "12345678",
     "role": "user",
-    "pincode": "673601"
+    "pincode": ["673601","673572"],
+    "mobileNumber": "1234567890"
 }
 
 ### user login
@@ -34,7 +35,7 @@ POST http://127.0.0.1:3000/api/login HTTP/1.1
 Content-Type: application/json
 
 {
-    "email": "nihalninu25@gmail.com",
+    "email": "vendor2@gmail.com",
     "password": "12345678"
 }
 ### user details update
@@ -262,3 +263,14 @@ Content-Type: application/json
 }
 ###
 GET http://127.0.0.1:3000/api/home/about-us HTTP/1.1
+
+
+### home display products
+GET http://127.0.0.1:3000/api/home?pincode=673572&category=default HTTP/1.1
+auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmFlNzZmYjFmMzhkNzE1Zjg5MWE0MjEiLCJpYXQiOjE2MTg5MTc1ODB9.dqSpH98XFVZN4olDf5_-Z0MsQ_J2fE4_eU7_nsz79j4
+Content-Type: application/json
+
+### home display products
+GET http://127.0.0.1:3000/api/home/items?search=samosa&pincode=673572 HTTP/1.1
+auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmFlNzZmYjFmMzhkNzE1Zjg5MWE0MjEiLCJpYXQiOjE2MTg5MTc1ODB9.dqSpH98XFVZN4olDf5_-Z0MsQ_J2fE4_eU7_nsz79j4
+Content-Type: application/json
