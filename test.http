@@ -35,7 +35,7 @@ POST http://127.0.0.1:3000/api/login HTTP/1.1
 Content-Type: application/json
 
 {
-    "email": "vendor2@gmail.com",
+    "email": "nihalninu25@gmail.com",
     "password": "12345678"
 }
 ### user details update
@@ -274,3 +274,9 @@ Content-Type: application/json
 GET http://127.0.0.1:3000/api/home/items?search=samosa&pincode=673572 HTTP/1.1
 auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmFlNzZmYjFmMzhkNzE1Zjg5MWE0MjEiLCJpYXQiOjE2MTg5MTc1ODB9.dqSpH98XFVZN4olDf5_-Z0MsQ_J2fE4_eU7_nsz79j4
 Content-Type: application/json
+### Get all user details
+GET http://127.0.0.1:3000/api/admin/user-details HTTP/1.1
+
+### Get all previous order history
+GET http://127.0.0.1:3000/api/home/previous-orders HTTP/1.1
+auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmFlNzZmYjFmMzhkNzE1Zjg5MWE0MjEiLCJpYXQiOjE2MTkyMzU2ODV9._mxyJ_C9GeJXuiW-FLriwY1C8SmrUuetWHb8fSHAv_I

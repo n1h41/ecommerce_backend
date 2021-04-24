@@ -127,42 +127,43 @@ router.get('/order/history', authenticate, isAdmin, async (req, res) => {
 
 //add delivery boy
 router.post('/delivery-boys/add', async (req, res) => {
-
     const { error } = deliveryBoyValidation(req.body)
     if (error) return res.status(400).json(error)
-
     const salt = await bcrypt.genSalt(10)
     const hashedPassword = await bcrypt.hash(req.body.password, salt)
     req.body.password = hashedPassword
-
     const user = new User(req.body)
-
     const emailExist = await User.findOne({ email: req.body.email })
     if (emailExist) return res.status(400).send('Delivery boy with this email already exist')
-    
     try {
-
         const savedData = await user.save()
         console.log(savedData)
-        
+        return res.status(200).send(savedData)
     } catch (err) {
         return res.status(400).json(err)
     }
-
 })
 
 //About us
 router.post('/about-us/add', async (req, res) => {
-    /* console.log(req.body) */
-    /* const details = new AboutUs(req.body) */
     try {
-        const update = await AboutUs.findByIdAndUpdate({_id:'6038d1026056deb5fc3bc7c8'}, req.body, {useFindAndModify: false})
+        const update = await AboutUs.findByIdAndUpdate({ _id: '6038d1026056deb5fc3bc7c8' }, req.body, { useFindAndModify: false })
         console.log(update)
         return res.json({
             status: 'OK'
         })
     } catch (err) {
         return res.status(400).send(err)
+    }
+})
+
+//Get all user details
+router.get('/user-details', async (req, res) => {
+    try {
+        const users = await User.find({ role: { $not: { $regex: 'admin' } } }, { _id: 0, __v: 0 })
+        return res.send(users)
+    } catch (error) {
+        return res.status(400).send(error)
     }
 })
 

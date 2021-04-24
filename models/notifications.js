@@ -8,6 +8,10 @@ const notificationSchema = new mongoose.Schema({
         min: 3,
         max: 5,
     },
+    order_id: {
+        type: String,
+        required: true
+    },
     content: {
         type: Object,
         required: true,

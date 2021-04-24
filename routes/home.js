@@ -3,18 +3,19 @@ const Products = require('../models/product')
 const Notification = require('../models/notifications')
 const AboutUs = require('../models/about_us')
 const DeliveryData = require('../models/deliveryBoy')
+const OrderDetails = require('../models/order_details')
 const authenticate = require('./verifyToken')
 const firebaseToken = require('../models/firebaseToken')
 const User = require('../models/user')
 
 router.get('', authenticate, async (req, res) => {
     try {
-        const vendors = await User.find({pincode: req.query.pincode, role: 'vendor'},{_id: 1})
+        const vendors = await User.find({ pincode: req.query.pincode, role: 'vendor' }, { _id: 1 })
         if (req.query.category == 'default') {
-            const products = await Products.find({vendor: {$in: vendors}})
+            const products = await Products.find({ vendor: { $in: vendors } })
             return res.send(products).status(200)
         } else {
-            const products = await Products.find({vendor: {$in: vendors}, category: req.query.category})
+            const products = await Products.find({ vendor: { $in: vendors }, category: req.query.category })
             return res.send(products).status(200)
         }
     } catch (error) {
@@ -25,28 +26,28 @@ router.get('', authenticate, async (req, res) => {
 
 // Product Search Funtionality
 router.get('/items', async (req, res) => {
-    try{
-        const vendors = await User.find({pincode: req.query.pincode, role: 'vendor'},{_id: 1})
-        searchResult = await Products.find({ product_name : new RegExp(req.query.search, "i"), vendor: {$in: vendors}})
-        if( searchResult.length == 0 ) return res.status(400).send("No product's found")
+    try {
+        const vendors = await User.find({ pincode: req.query.pincode, role: 'vendor' }, { _id: 1 })
+        searchResult = await Products.find({ product_name: new RegExp(req.query.search, "i"), vendor: { $in: vendors } })
+        if (searchResult.length == 0) return res.status(400).send("No product's found")
         else return res.send(searchResult)
     }
-    catch(err){
+    catch (err) {
         res.status(400).send(err)
     }
 })
 
 // Get Notification List
 router.get('/notification/list', authenticate, async (req, res) => {
-    const notifList = await Notification.find({target: req.user._id})
+    const notifList = await Notification.find({ target: req.user._id })
     res.send(notifList)
 })
 
 //Logout
 router.post('/logout', authenticate, async (req, res) => {
     try {
-        const doc = await firebaseToken.findOneAndDelete({user_id: req.user._id}, { useFindAndModify: false })
-        console.log(`${req.user.name} logged Out\n`,doc)
+        const doc = await firebaseToken.findOneAndDelete({ user_id: req.user._id }, { useFindAndModify: false })
+        console.log(`${req.user.name} logged Out\n`, doc)
     } catch (err) {
         res.status(400).send(err)
     }
@@ -55,29 +56,71 @@ router.post('/logout', authenticate, async (req, res) => {
 //Get delivery details for delivery Boy
 router.get('/deliveryDetails', authenticate, async (req, res) => {
     try {
-        const data = await DeliveryData.find({user_id: req.user._id})
-        res.send(data)
+        const data = await OrderDetails.find({ delivery_boy_id: req.user._id })
+        return res.send(data)
     } catch (err) {
-        res.status(400).send(err)
+        console.log(err)
+        return res.status(400).send(err)
     }
 })
 
 //Update Delivery status
 router.post('/deliveryDetails/update', authenticate, async (req, res) => {
-    /* console.log(req) */
     try {
-        const data = await DeliveryData.findByIdAndUpdate(req.body.id, req.body.update)
-        console.log(data)
-        return res.status(200).json({status:'OK'})
+        const updateData = await OrderDetails.findByIdAndUpdate(req.query.id, req.body)
+        console.log(updateData)
+        return res.status(200).json({ status: 'OK' })
     } catch (err) {
-        res.status(400).send(err)
+        console.log(err)
+        return res.status(400).send(err)
     }
 })
 
 //Get About Us details
-router.get('/about-us', async (req, res)=>{
-    const details = await AboutUs.findById({_id: '6038d1026056deb5fc3bc7c8'},{_id: 0})
+router.get('/about-us', async (req, res) => {
+    const details = await AboutUs.findById({ _id: '6038d1026056deb5fc3bc7c8' }, { _id: 0 })
     res.send(details)
+})
+
+//Get previous order history
+router.get('/previous-orders', authenticate, async (req, res) => {
+    try {
+        const order_history = await OrderDetails.find({"customer.id": req.user._id })
+        return res.send(order_history).status(200)
+    } catch (error) {
+        console.log(error)
+        res.send(error).status(400)
+    }
+})
+
+//Return product
+router.get('/return-product', authenticate, async (req, res) => {
+    try {
+        const update = {
+            return: {
+                initiated: true,
+                completed: false,
+            }
+        }
+        const updatedOrder = await OrderDetails.findByIdAndUpdate(req.query.id, update, {useFindAndModify: false})
+        console.log(updatedOrder)
+        return res.send(updatedOrder).status(200)
+    } catch (error) {
+        console.log(error)
+        res.send(error).status(400)
+    }
+})
+
+router.post('/order-details/update', authenticate, async (req, res) => {
+    console.log(req.query.id, req.body)
+    try {
+        const updateData = await OrderDetails.findByIdAndUpdate(req.query.id, req.body)
+        console.log(updateData)
+        return res.status(200).json({ status: 'OK' })
+    } catch (err) {
+        console.log(err)
+        return res.status(400).send(err)
+    }
 })
 
 module.exports = router

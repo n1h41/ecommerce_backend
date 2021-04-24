@@ -3,10 +3,10 @@ const Product = require('../models/product')
 const authenticate = require('./verifyToken')
 const path = require('path')
 const multer = require('multer')
-const { productDetailsValidation } = require('../validation')
 const { isVendor } = require('./verifyUserRole')
 const fs = require('fs')
 const Category = require('../models/category')
+const OrderDetails = require('../models/order_details')
 const Notification = require('../models/notifications')
 const User = require('../models/user')
 
@@ -204,16 +204,25 @@ router.get('/notification', authenticate, async (req, res) => {
 
 //get available delivery boys details
 router.get('/delivery-boys/list', authenticate, async (req, res) => {
-
     try {
-
-        const deliveryBoysList = await User.find({role: 'delivery_boy', availability: true, onDelivery: false, pincode: req.user.pincode}, { mobileNumber: 1, name: 1, _id: 0, pincode: 1 })
-        res.json(deliveryBoysList)
+        const deliveryBoysList = await User.find({ role: 'delivery_boy', availability: true, onDelivery: false, pincode: req.query.pincode }, { mobileNumber: 1, name: 1, _id: 1, pincode: 1 })
+        return res.json(deliveryBoysList)
 
     } catch (err) {
-        res.status(400).json(err)
+        console.log(err)
+        return res.status(400).json(err)
     }
+})
 
+//get confirmed orders
+router.get('/confirmed-orders', authenticate, isVendor, async (req, res) => {
+    try {
+        const confirmedOrders = await OrderDetails.find({ vendor: req.user.email, payment_status: "SUCCESS" })
+        return res.send(confirmedOrders)
+    } catch (error) {
+        console.log(error)
+        return res.send(error).status(400)
+    }
 })
 
 module.exports = router

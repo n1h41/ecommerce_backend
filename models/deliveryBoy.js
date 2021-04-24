@@ -1,4 +1,3 @@
-const { object } = require('@hapi/joi')
 const mongoose = require('mongoose')
 
 const deliveryDataSchema = new mongoose.Schema({

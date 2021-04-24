@@ -43,7 +43,11 @@ router.post('/payment', authenticate, async (req, res) => {
 router.post('/order/add', authenticate, async (req, res) => {
     const vendorMail = await User.findById(req.body.vendor_id, { _id: 0, email: 1})
     const order = new OrderDetails({
-        customer: req.user.name,
+        customer: {
+            name: req.user.name,
+            id: req.user._id,
+            mobileNumber: req.user.mobileNumber,
+        },
         vendor: vendorMail.email,
         address: req.body.address,
         amount: req.body.amount,

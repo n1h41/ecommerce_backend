@@ -1,13 +1,8 @@
 const mongoose = require('mongoose')
-
-const date = new Date()
-
 const orderSchema = new mongoose.Schema({
     customer: {
-        type: String,
+        type: Object,
         required: true,
-        min: 6,
-        max: 255
     },
     vendor: {
         type: String,
@@ -47,6 +42,16 @@ const orderSchema = new mongoose.Schema({
     date: {
         type: Date,
         required: true
+    },
+    delivered: {
+        type: Boolean,
+        default: false
+    },
+    delivery_boy_id: {
+        type: String
+    },
+    return: {
+        type: Object
     }
 })
 

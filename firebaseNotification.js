@@ -118,47 +118,24 @@ router.post('/send', authenticate, async (req, res) => {
 })
 
 router.post('/send/orderDetails/deliveryBoy', async (req, res) => {
-  /* console.log(req.body) */
   try {
-    const user = await User.findOne({ mobileNumber: req.query.q }, { name: 1 })
-    const token = await FirebaseToken.findOne({ user_id: user._id }, { firebase_device_token: 1, _id: 0 });
-    var message = {
-      notification: {
-        title: `New Delivery`,
-        body: `${req.body.content.notification.title}`
-      },
-      data: {
-        address: `${req.body.content.data.address}`,
-        qty: `${req.body.content.data.qty}`,
-        price: `${req.body.content.data.price}`
-      },
-      tokens: [token.firebase_device_token]
-    }
-    sendMessage(message)
-    /* if (isSuccess == true) { */
-    try {
-      /* const deleteData = await Notification.findByIdAndDelete(req.body._id) */
-      const delivery_data = new DeliveryData({
-        user_id: user._id,
-        message: {
-          title: message.notification.body,
-          address: message.data.address,
-          qty: message.data.qty,
-          price: message.data.price
-        }
-      })
-      try {
-        const savedData = await delivery_data.save()
-        return res.json({ status: 'OK' })
-      } catch (err) {
-        return res.status(400).send(err)
+    const updated_order = await OrderDetails.findByIdAndUpdate(req.query.id, req.body, { useFindAndModify: false })
+    res.status(200).send(updated_order)
+    const token = await FirebaseToken.findOne({ user_id: req.body.delivery_boy_id }, { firebase_device_token: 1, _id: 0 });
+    if (token) {
+      console.log(true)
+      var message = {
+        notification: {
+          title: `New Delivery`,
+          body: `ID: ${req.query.id}`
+        },
+        tokens: [token.firebase_device_token]
       }
-    } catch (err) {
-      res.status(400).send(400)
+      return sendMessage(message)
     }
-    /* } */
-  } catch (err) {
-    return res.status(400).json(err)
+  } catch (error) {
+    console.log(error)
+    return res.status(400).send(error)
   }
 })
 
@@ -179,9 +156,10 @@ async function sendNotifWebHook(orderId) {
     try {
       var registrationTokens = []
       const vendorId = await User.findOne({ email: order.vendor }, { _id: 1 })
+      console.log(order)
       var message = {
         notification: {
-          title: `${order.item} purchased by ${order.customer}`,
+          title: `${order.item} purchased by ${order.customer.name}`,
           body: `Price: ${order.amount.price * order.amount.qty}`,
         },
         data: {
@@ -192,14 +170,16 @@ async function sendNotifWebHook(orderId) {
       }
       const notif = new Notification({
         target: `${vendorId._id}`,
-        content: message
+        content: message,
+        order_id: order._id //individual order id, not the one generated for razorpay
       })
       const savedNotif = await notif.save()
       console.log(savedNotif)
       const token = await FirebaseToken.findOne({ user_id: vendorId })
       if (token) {
         registrationTokens.push(token['firebase_device_token'])
-        message = {...message,
+        message = {
+          ...message,
           tokens: registrationTokens
         }
         sendMessage(message)

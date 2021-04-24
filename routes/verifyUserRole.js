@@ -1,6 +1,4 @@
 const User = require("../models/user")
-
-
 async function isVendor(req, res, next) {
     user = req.user
     if (user.role == 'vendor'){

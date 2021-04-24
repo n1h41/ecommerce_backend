@@ -21,7 +21,7 @@ const deliveryBoyValidation = (data) => {
         email: joi.string().min(6).required().email(),
         password: joi.string().min(6).required(),
         role: joi.string().min(3).required(),
-        pincode: joi.number().required().integer().min(6),
+        pincode: joi.required(),
         mobileNumber: joi.number().integer().min(10),
         availability: joi.boolean().required(),
         onDelivery: joi.boolean().required()
@@ -34,7 +34,6 @@ const productDetailsValidation = (data) => {
         product_name: joi.string().min(1).required(),
         price: joi.number().required().integer().min(1),
         offer_price: joi.number().required().integer().min(1),
-        /* pincode: joi.number().required().integer().min(6), */
         category: joi.string().min(3).required()
     })
     return schema.validate(data)
