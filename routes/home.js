@@ -10,7 +10,8 @@ const User = require('../models/user')
 
 router.get('', authenticate, async (req, res) => {
     try {
-        const vendors = await User.find({ pincode: req.query.pincode, role: 'vendor' }, { _id: 1 })
+        var vendors = await User.find({ pincode: req.query.pincode, role: 'vendor' }, { _id: 1 })
+        var vendors = [...vendors,'5fef056d43619f00246e6b8d'] //added a mastor vendor id
         if (req.query.category == 'default') {
             const products = await Products.find({ vendor: { $in: vendors } })
             return res.send(products).status(200)

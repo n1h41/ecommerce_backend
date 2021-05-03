@@ -266,7 +266,7 @@ GET http://127.0.0.1:3000/api/home/about-us HTTP/1.1
 
 
 ### home display products
-GET http://127.0.0.1:3000/api/home?pincode=673572&category=default HTTP/1.1
+GET http://127.0.0.1:3000/api/home?pincode=673601&category=default HTTP/1.1
 auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmFlNzZmYjFmMzhkNzE1Zjg5MWE0MjEiLCJpYXQiOjE2MTg5MTc1ODB9.dqSpH98XFVZN4olDf5_-Z0MsQ_J2fE4_eU7_nsz79j4
 Content-Type: application/json
 
@@ -280,3 +280,6 @@ GET http://127.0.0.1:3000/api/admin/user-details HTTP/1.1
 ### Get all previous order history
 GET http://127.0.0.1:3000/api/home/previous-orders HTTP/1.1
 auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmFlNzZmYjFmMzhkNzE1Zjg5MWE0MjEiLCJpYXQiOjE2MTkyMzU2ODV9._mxyJ_C9GeJXuiW-FLriwY1C8SmrUuetWHb8fSHAv_I
+
+### Test
+GET http://127.0.0.1:3000/update-all/ HTTP/1.1

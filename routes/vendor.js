@@ -1,5 +1,6 @@
 const router = require('express').Router()
 const Product = require('../models/product')
+const ProductReturn = require('../models/product_return')
 const authenticate = require('./verifyToken')
 const path = require('path')
 const multer = require('multer')
@@ -54,12 +55,14 @@ router.post('/addproducts', authenticate, isVendor, upload.array('product-image'
         image_url: image_url_array,
         image_file_name: image_file_names,
         category: req.body.category,
-        vendor: req.user
+        vendor: req.user,
+        return_window: req.body.return_window
     })
-
+    
     //saving the model instance
     try {
         savedProduct = await product.save()
+        savedProductReturnData = await productReturnData.save()
         res.send(savedProduct)
     }
     catch (err) {

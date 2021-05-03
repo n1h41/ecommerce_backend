@@ -52,6 +52,10 @@ const orderSchema = new mongoose.Schema({
     },
     return: {
         type: Object
+    },
+    return_window: {
+        type: Number,
+        required: true
     }
 })
 

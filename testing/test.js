@@ -156,4 +156,12 @@ router.get('/promise', authenticate, (req, res) => {
     res.send(req.user)
 })
 
+router.get('/update-all', async (req, res) => {
+    var update = {
+        return_window: 2
+    }
+    const updatedProducts = await OrderDetails.updateMany(update)
+    res.send(updatedProducts)
+})
+
 module.exports = router

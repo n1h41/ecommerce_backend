@@ -53,7 +53,8 @@ router.post('/order/add', authenticate, async (req, res) => {
         amount: req.body.amount,
         item: req.body.product,
         order_id: req.body.order_id,
-        date: Date.now()
+        date: Date.now(),
+        return_window: req.body.return_window
     })
     try {
         const savedOrder = await order.save()
