@@ -55,6 +55,7 @@ router.post('/vendor/add', authenticate, isAdmin, async (req, res) => {
         password: hashedPassword,
         role: 'vendor',
         pincode: req.body.pincode,
+        mobileNumber: req.body.mobileNumber
     })
     const savedUser = await user.save()
     res.send(savedUser)
@@ -161,6 +162,16 @@ router.post('/about-us/add', async (req, res) => {
 router.get('/user-details', async (req, res) => {
     try {
         const users = await User.find({ role: { $not: { $regex: 'admin' } } }, { _id: 0, __v: 0 })
+        return res.send(users)
+    } catch (error) {
+        return res.status(400).send(error)
+    }
+})
+
+router.get('/user-details/search', async (req, res) => {
+    /* console.log(req.query.q) */
+    try {
+        const users = await User.find({ name: new RegExp(req.query.q, "i") }, { _id: 0, __v: 0 })
         return res.send(users)
     } catch (error) {
         return res.status(400).send(error)

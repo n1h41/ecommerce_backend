@@ -283,3 +283,5 @@ auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmFlNzZmYjFmMzhkNzE
 
 ### Test
 GET http://127.0.0.1:3000/update-all/ HTTP/1.1
+### Test
+GET http://127.0.0.1:3000/admin/user-details/search?q=nihal HTTP/1.1
