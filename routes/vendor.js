@@ -24,7 +24,6 @@ const upload = multer({
 
 // Allow vendor to add products
 router.post('/addproducts', authenticate, isVendor, upload.array('product-image', 5), async (req, res) => {
-
     const image_file_names = []
 
     //validation
@@ -41,9 +40,13 @@ router.post('/addproducts', authenticate, isVendor, upload.array('product-image'
     //adding product with category value taken from category document in the database
     try {
         category = await Category.findOne({ category_name: req.body.category })
-        if (!category) return res.status(400).send(`The category ${req.query.q} doesn't exist. Please add the category.`)
+        if (!category) {
+            console.log(err)
+            return res.status(400).send(`The category ${req.query.q} doesn't exist. Please add the category.`)
+        }
     }
     catch (err) {
+        console.log(err)
         return res.status(400).send(err)
     }
 
@@ -62,10 +65,10 @@ router.post('/addproducts', authenticate, isVendor, upload.array('product-image'
     //saving the model instance
     try {
         savedProduct = await product.save()
-        savedProductReturnData = await productReturnData.save()
         res.send(savedProduct)
     }
     catch (err) {
+        console.log(err)
         res.status(400).send(err)
     }
 })
