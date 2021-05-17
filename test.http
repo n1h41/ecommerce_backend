@@ -284,4 +284,10 @@ auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmFlNzZmYjFmMzhkNzE
 ### Test
 GET http://127.0.0.1:3000/update-all/ HTTP/1.1
 ### Test
-GET http://127.0.0.1:3000/admin/user-details/search?q=nihal HTTP/1.1
+GET http://127.0.0.1:3000/api/admin/user-details/search?q=nihal HTTP/1.1
+
+### Category view
+GET http://127.0.0.1:3000/api/admin/categories HTTP/1.1
+
+### Category delete
+DELETE http://127.0.0.1:3000/api/admin/categories/delete?q=609bf87e0be45777c347f722 HTTP/1.1

@@ -4,9 +4,12 @@ const { isAdmin } = require('./verifyUserRole')
 const User = require('../models/user')
 const AboutUs = require('../models/about_us')
 const OrderDetails = require('../models/order_details')
+const Category = require('../models/category')
 const { userValidation } = require('../validation')
 const { deliveryBoyValidation } = require('../validation')
 const bcrypt = require('bcryptjs')
+const { json } = require('express')
+const auth = require('./verifyToken')
 
 router.get('/vendor/list', authenticate, isAdmin, async (req, res) => {
 
@@ -175,6 +178,21 @@ router.get('/user-details/search', async (req, res) => {
         return res.send(users)
     } catch (error) {
         return res.status(400).send(error)
+    }
+})
+
+router.delete('/categories/delete', authenticate, isAdmin, async (req, res) => {
+    try {
+        const deletedData = await Category.findByIdAndDelete(req.query.q)
+        if (deletedData === null) {
+            return res.status(400).json({
+                error: "Category doesn't exist."
+            })
+        }
+        return res.send(deletedData)
+    } catch (error) {
+        console.log(error)
+        return res.send(error)
     }
 })
 

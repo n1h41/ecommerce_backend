@@ -195,10 +195,14 @@ router.post('/add-category', async (req, res) => {
 
 //get all all available categories
 router.get('/category', authenticate, async (req, res) => {
+    try {
+        const category = await Category.find()
+        return res.send(category)
 
-    const category = await Category.find()
-    res.send(category)
-
+    } catch (error) {
+        console.log(error)
+        return res.send(error);
+    }
 })
 
 router.get('/notification', authenticate, async (req, res) => {
