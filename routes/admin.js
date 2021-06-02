@@ -10,6 +10,7 @@ const { deliveryBoyValidation } = require('../validation')
 const bcrypt = require('bcryptjs')
 const { json } = require('express')
 const auth = require('./verifyToken')
+const { date } = require('@hapi/joi')
 
 router.get('/vendor/list', authenticate, isAdmin, async (req, res) => {
 
@@ -190,6 +191,55 @@ router.delete('/categories/delete', authenticate, isAdmin, async (req, res) => {
             })
         }
         return res.send(deletedData)
+    } catch (error) {
+        console.log(error)
+        return res.send(error)
+    }
+})
+
+router.get('/trade-details', /* authenticate, isAdmin, */ async (req, res) => {
+    try {
+        var finalData = []
+        var result = [], a = [];
+        months = {
+            1: 'january',
+            2: 'february',
+            3: 'march',
+            4: 'april',
+            5: 'may',
+            6: 'june',
+            7: 'july',
+            8: 'august',
+            9: 'september',
+            10: 'october',
+            11: 'november',
+            12: 'december',
+        }
+        const data = await OrderDetails.find({ vendor: req.query.q, payment_status: 'SUCCESS' }, { _id: 0, amount: 1, date: 1 })
+        data.map((item) => {
+            var mmyy = `${months[item.date.getMonth() + 1]}-${item.date.getFullYear()}`
+            var amount = item.amount.price * item.amount.qty
+            finalData.push({
+                mmyy: mmyy,
+                amount: amount
+            })
+            a.push(mmyy)
+        })
+        a = [...new Set(a)] // removing duplicate
+        for (let i = 0; i < a.length; i++) {
+            var sum = 0
+            for (let j = 0; j < finalData.length; j++) {
+                if (a[i] == finalData[j].mmyy) {
+                    sum = sum + finalData[j].amount
+                }
+            }
+            result.push({
+                month: a[i],
+                amount: sum
+            })
+        }
+        console.log(finalData)
+        return res.send(result)
     } catch (error) {
         console.log(error)
         return res.send(error)

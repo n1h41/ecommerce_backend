@@ -291,3 +291,9 @@ GET http://127.0.0.1:3000/api/admin/categories HTTP/1.1
 
 ### Category delete
 DELETE http://127.0.0.1:3000/api/admin/categories/delete?q=609bf87e0be45777c347f722 HTTP/1.1
+
+### Trade Details
+GET http://127.0.0.1:3000/api/admin/trade-details?q=superwoman@gmail.com HTTP/1.1
+
+### Vendor List
+GET http://127.0.0.1:3000/api/admin/vendor/list HTTP/1.1
