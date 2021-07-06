@@ -271,7 +271,8 @@ router.post('/banner/add', upload.single('banner-image'), async (req, res) => {
 })
 
 router.delete('/banner/delete', (req, res) => {
-    BannerDetails.findOne({_id: req.query.q},{_id: 0, url: 1}).then((response) => {
+    BannerDetails.findOneAndDelete({_id: req.query.q},{_id: 0, url: 1}).then(response => {
+        if(!response) return res.status(404).send('No such file')
         const filename = response.url.split('banner-images/')[1]
         const path = `uploads/banners/${filename}`
         fs.unlink(path, (err) => {
@@ -281,7 +282,7 @@ router.delete('/banner/delete', (req, res) => {
             }
             return res.send('Image Deleted')
         })
-    })
+    }).catch(err => console.log(err))
 })
 
 module.exports = router

@@ -298,5 +298,7 @@ GET http://127.0.0.1:3000/api/admin/trade-details?q=superwoman@gmail.com HTTP/1.
 ### Vendor List
 GET http://127.0.0.1:3000/api/admin/vendor/list HTTP/1.1
 
-### vendors products list
+### vendor products list
 GET http://127.0.0.1:3000/api/admin/vendor-products?q=nihalninu25@gmail.com
+### banner url list
+GET http://127.0.0.1:3000/api/home/banner

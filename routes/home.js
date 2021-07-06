@@ -3,6 +3,7 @@ const Products = require('../models/product')
 const Notification = require('../models/notifications')
 const AboutUs = require('../models/about_us')
 const DeliveryData = require('../models/deliveryBoy')
+const BannerDetails = require('../models/banner_details')
 const OrderDetails = require('../models/order_details')
 const authenticate = require('./verifyToken')
 const firebaseToken = require('../models/firebaseToken')
@@ -122,6 +123,13 @@ router.post('/order-details/update', authenticate, async (req, res) => {
         console.log(err)
         return res.status(400).send(err)
     }
+})
+
+router.get('/banner', (req, res) => {
+    BannerDetails.find({},{url: 1}).then((response) => {
+        if(response.length != 0) return res.send(response)
+        else return res.status(400).send('No banners available')
+    })
 })
 
 module.exports = router
