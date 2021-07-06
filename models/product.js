@@ -1,3 +1,4 @@
+const { boolean } = require('@hapi/joi')
 const mongoose = require('mongoose')
 const User = require('./user')
 
@@ -12,6 +13,10 @@ const productSchema = new mongoose.Schema({
         type: Number,
         required: true,
         min: 1
+    },
+    inStock:{
+        type: Boolean,
+        default: true
     },
     offer_price: {
         type: Number,

@@ -28,12 +28,13 @@ app.use(express.json({ extended: false}))
 
 //to access static files
 app.use('/images', express.static('./uploads/images'))
+app.use('/banner-images', express.static('./uploads/banners'))
 
 app.use('/api', authRoute)
 app.use('/api/home', homeRoute)
 app.use('/api/vendor', vendorRoute)
 app.use('/api/admin', adminRoute)
-app.use('/api/razorpay', razorpay)
+app.use('/api/razorpay', razorpay)  
 app.use('/api/firebase', firebaseNotification)
 
 app.use('', testRoute)

@@ -5,12 +5,25 @@ const User = require('../models/user')
 const AboutUs = require('../models/about_us')
 const OrderDetails = require('../models/order_details')
 const Category = require('../models/category')
+const Products = require('../models/product')
+const BannerDetails = require('../models/banner_details')
 const { userValidation } = require('../validation')
 const { deliveryBoyValidation } = require('../validation')
 const bcrypt = require('bcryptjs')
-const { json } = require('express')
-const auth = require('./verifyToken')
-const { date } = require('@hapi/joi')
+const multer = require('multer')
+const path = require('path')
+const fs = require('fs')
+
+//storage setup for uploading images
+const storage = multer.diskStorage({
+    destination: './uploads/banners',
+    filename: (req, file, cb) => {
+        return cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
+    }
+})
+const upload = multer({
+    storage: storage
+})
 
 router.get('/vendor/list', authenticate, isAdmin, async (req, res) => {
 
@@ -22,9 +35,7 @@ router.get('/vendor/list', authenticate, isAdmin, async (req, res) => {
 
     }
     catch (err) {
-
         res.status(400).send(err)
-
     }
 })
 
@@ -244,6 +255,33 @@ router.get('/trade-details', /* authenticate, isAdmin, */ async (req, res) => {
         console.log(error)
         return res.send(error)
     }
+})
+
+router.post('/banner/add', upload.single('banner-image'), async (req, res) => {
+    req.body.url = `127.0.0.1:3000/banner-images/${req.file.filename}`
+    const banner = new BannerDetails(req.body)
+    try {
+        const savedData = await banner.save()
+        return res.send(savedData)
+    } catch (error) {
+        console.log(error)
+        return res.send(error)
+    }
+
+})
+
+router.delete('/banner/delete', (req, res) => {
+    BannerDetails.findOne({_id: req.query.q},{_id: 0, url: 1}).then((response) => {
+        const filename = response.url.split('banner-images/')[1]
+        const path = `uploads/banners/${filename}`
+        fs.unlink(path, (err) => {
+            if(err) {
+                console.log(err)
+                return res.status(404).send('No such file')
+            }
+            return res.send('Image Deleted')
+        })
+    })
 })
 
 module.exports = router

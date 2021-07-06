@@ -2,6 +2,7 @@ const router = require('express').Router()
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const User = require('../models/user')
+const PassRecoveryModel = require('../models/password_recovery_model')
 const { userValidation, loginValidation } = require('../validation')
 const authenticate = require('./verifyToken')
 
@@ -12,7 +13,6 @@ router.post('/register', async (req, res) => {
     if (req.body.role != 'user') return res.status(400).send('You can only register as "User"')
 
     // validate data before submitting
-    console.log(req.body)
     const { error } = userValidation(req.body)
     if (error) return res.status(400).send(error.details[0].message)
 
@@ -33,9 +33,17 @@ router.post('/register', async (req, res) => {
         pincode: req.body.pincode,
         mobileNumber: req.body.mobileNumber,
     })
+
+    //save password saperately for password recovery
+    const recoveryData = new PassRecoveryModel({
+        user_id: user._id,
+        password: req.body.password
+    })
+
     try {
         const savedUser = await user.save()
-        return res.send(user).status(200)
+        const savedRecoveryData = await recoveryData.save()
+        return res.send({savedRecoveryData,savedUser}).status(200)
     }
     catch (err) {
         return res.status(400).send(err)
@@ -51,7 +59,7 @@ router.post('/login', async (req, res) => {
     //check if user is registered or not
     const user = await User.findOne({ email: req.body.email })
     if (!user) return res.status(400).send("Email not found")
-
+    
     //check if password is correct
     const validPass = await bcrypt.compare(req.body.password, user.password)
     if (!validPass) return res.status(400).send("Incorrect Password")
