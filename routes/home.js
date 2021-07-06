@@ -10,13 +10,13 @@ const User = require('../models/user')
 
 router.get('', authenticate, async (req, res) => {
     try {
-        var vendors = await User.find({ pincode: req.query.pincode, role: 'vendor' }, { _id: 1 })
-        var vendors = [...vendors,'6092938f4a9a3a6970812f79'] //added a master vendor id
+        /* var vendors = await User.find({ pincode: req.query.pincode, role: 'vendor' }, { _id: 1 })
+        var vendors = [...vendors,'6092938f4a9a3a6970812f79'] //added a master vendor id */
         if (req.query.category == 'default') {
-            const products = await Products.find({ vendor: { $in: vendors } })
+            const products = await Products.find(/* { vendor: { $in: vendors } } */)
             return res.send(products).status(200)
         } else {
-            const products = await Products.find({ vendor: { $in: vendors }, category: req.query.category })
+            const products = await Products.find({ /* vendor: { $in: vendors },  */category: req.query.category })
             return res.send(products).status(200)
         }
     } catch (error) {
