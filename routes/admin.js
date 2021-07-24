@@ -5,7 +5,7 @@ const User = require('../models/user')
 const AboutUs = require('../models/about_us')
 const OrderDetails = require('../models/order_details')
 const Category = require('../models/category')
-const Products = require('../models/product')
+const PassRecoveryModel = require('../models/password_recovery_model')
 const BannerDetails = require('../models/banner_details')
 const { userValidation } = require('../validation')
 const { deliveryBoyValidation } = require('../validation')
@@ -184,7 +184,6 @@ router.get('/user-details', async (req, res) => {
 })
 
 router.get('/user-details/search', async (req, res) => {
-    /* console.log(req.query.q) */
     try {
         const users = await User.find({ name: new RegExp(req.query.q, "i") }, { _id: 0, __v: 0 })
         return res.send(users)
@@ -258,7 +257,7 @@ router.get('/trade-details', /* authenticate, isAdmin, */ async (req, res) => {
 })
 
 router.post('/banner/add', upload.single('banner-image'), async (req, res) => {
-    req.body.url = `127.0.0.1:3000/banner-images/${req.file.filename}`
+    req.body.url = `${process.env.SERVER_URL}/banner-images/${req.file.filename}`
     const banner = new BannerDetails(req.body)
     try {
         const savedData = await banner.save()
@@ -271,18 +270,33 @@ router.post('/banner/add', upload.single('banner-image'), async (req, res) => {
 })
 
 router.delete('/banner/delete', (req, res) => {
-    BannerDetails.findOneAndDelete({_id: req.query.q},{_id: 0, url: 1}).then(response => {
-        if(!response) return res.status(404).send('No such file')
+    BannerDetails.findOneAndDelete({ _id: req.query.q }, { _id: 0, url: 1 }).then(response => {
+        if (!response) return res.status(404).send('No such file')
         const filename = response.url.split('banner-images/')[1]
         const path = `uploads/banners/${filename}`
         fs.unlink(path, (err) => {
-            if(err) {
+            if (err) {
                 console.log(err)
                 return res.status(404).send('No such file')
             }
             return res.send('Image Deleted')
         })
     }).catch(err => console.log(err))
+})
+
+
+router.get('/user-details/passwd', (req, res) => {
+    User.findOne({ email: req.query.email }, { _id: 1 }).then((value) => {
+        if (value)
+            return PassRecoveryModel.findOne({user_id: value},{password: 1, _id: 0}).then((value) => {
+                if(value)
+                    return res.send(value)
+                else
+                    return res.status(400).send('No password saved')
+            }).catch((error) => res.status(400).send(error))
+        else
+            return res.status(400).send('No user found')
+    }).catch((error) => res.status(400).send(error))
 })
 
 module.exports = router

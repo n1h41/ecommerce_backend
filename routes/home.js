@@ -29,7 +29,7 @@ router.get('', authenticate, async (req, res) => {
 // Product Search Funtionality
 router.get('/items', async (req, res) => {
     try {
-        const vendors = await User.find({ pincode: req.query.pincode, role: 'vendor' }, { _id: 1 })
+        const vendors = await User.find({ /* pincode: req.query.pincode,  */role: 'vendor' }, { _id: 1 })
         searchResult = await Products.find({ product_name: new RegExp(req.query.search, "i"), vendor: { $in: vendors } })
         if (searchResult.length == 0) return res.status(400).send("No product's found")
         else return res.send(searchResult)
